@@ -849,6 +849,35 @@ nav .nav-cta:hover { background: var(--orange-light); color: white; }
   margin-bottom: 18px;
 }
 
+
+/* ===== INSTAGRAM GRID ===== */
+.ig-cell {
+  text-decoration: none;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.ig-thumb {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 28px;
+  transition: opacity 0.2s;
+  min-height: 120px;
+}
+.ig-thumb:hover { opacity: 0.85; }
+.ig-label {
+  font-size: 11px;
+  color: white;
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.1em;
+}
 /* ===== INSTAGRAM ===== */
 .instagram-section {
   background: var(--off-white);
@@ -1301,16 +1330,27 @@ footer .footer-logo {
         5. 下のプレースホルダーは削除してOK
         ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
       -->
-      <!-- 公式Instagram埋め込み -->
-      <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:12px;">
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DVXcl4OD1_h/" data-instgrm-version="14" style="margin:0; min-width:0; width:100%;"></blockquote>
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWdbWTlD4jb/" data-instgrm-version="14" style="margin:0; min-width:0; width:100%;"></blockquote>
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWQKHdhD6Xu/" data-instgrm-version="14" style="margin:0; min-width:0; width:100%;"></blockquote>
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWFjdtiD8wZ/" data-instgrm-version="14" style="margin:0; min-width:0; width:100%;"></blockquote>
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DV7lvX-j9OD/" data-instgrm-version="14" style="margin:0; min-width:0; width:100%;"></blockquote>
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DVQIOs3D_2n/" data-instgrm-version="14" style="margin:0; min-width:0; width:100%;"></blockquote>
+      <!-- Instagram投稿グリッド -->
+      <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:8px;">
+        <a href="https://www.instagram.com/p/DVXcl4OD1_h/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
+        <a href="https://www.instagram.com/p/DWdbWTlD4jb/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
+        <a href="https://www.instagram.com/p/DWQKHdhD6Xu/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
+        <a href="https://www.instagram.com/p/DWFjdtiD8wZ/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
+        <a href="https://www.instagram.com/p/DV7lvX-j9OD/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
+        <a href="https://www.instagram.com/p/DVQIOs3D_2n/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
       </div>
-      <script async src="https://www.instagram.com/embed.js"></script>
     </div>
 
   </div>
@@ -1480,14 +1520,10 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
 });
 
 // Fade-up on scroll
-const obs = new IntersectionObserver(entries => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 60);
-    }
-  });
-}, { threshold: 0.08 });
-document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+// Show all fade-up elements immediately
+document.querySelectorAll('.fade-up').forEach((el, i) => {
+  setTimeout(() => el.classList.add('visible'), i * 80);
+});
 </script>
 </body>
 </html>
