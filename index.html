@@ -978,13 +978,12 @@ footer .footer-logo {
 }
 
 .fade-up {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 1;
+  transform: none;
 }
 .fade-up.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 /* ===== MODAL ===== */
@@ -1520,10 +1519,7 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
 });
 
 // Fade-up on scroll
-// Show all fade-up elements immediately
-document.querySelectorAll('.fade-up').forEach((el, i) => {
-  setTimeout(() => el.classList.add('visible'), i * 80);
-});
+// animation removed
 </script>
 </body>
 </html>
