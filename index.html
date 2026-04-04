@@ -632,13 +632,22 @@ function renderCarGrid() {
     const noShaken = c.inspection === '車検整備無';
     const inspClass = noShaken ? 'car-inspection no-shaken' : 'car-inspection';
     const inspIcon = noShaken ? '⚠️' : '✅';
+    // Google Drive URL → thumbnail変換
+    function getDriveImgUrl(url) {
+      if (!url) return '';
+      const m = url.match(/\/d\/([^/]+)/);
+      return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w600' : url;
+    }
+    const imgUrl = c.image ? getDriveImgUrl(c.image) : '';
+    const imgStyle = imgUrl ? 'background:none;' : '';
+    const imgHTML = imgUrl
+      ? '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.innerHTML=\'<div class=\"card-img-bg\">🚗</div><svg width=\"40\" height=\"40\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"2\" y=\"7\" width=\"20\" height=\"13\" rx=\"2\"/></svg>写真準備中\'"/>'
+      : '<div class="card-img-bg">🚗</div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>写真準備中';
     const soldHTML = c.sold ? '<div class="sold-overlay"><div class="sold-label">SOLD</div></div>' : '';
     return `
     <div class="car-card" data-type="${c.type}" onclick="openModal(${idx})">
-      <div class="card-img">
-        <div class="card-img-bg">🚗</div>
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-        写真準備中
+      <div class="card-img" style="${imgStyle}">
+        ${imgHTML}
         ${soldHTML}
         <button class="fav-btn" onclick="toggleFav(event,this)">🤍</button>
       </div>
