@@ -1039,22 +1039,75 @@ footer .footer-logo {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  header { padding: 0 16px; }
+  header { padding: 0 16px; height: 56px; }
   nav a:not(.nav-cta) { display: none; }
-  .hero { padding: 50px 20px 60px; }
-  .hero-stats { gap: 12px; }
-  .stat { padding: 12px 18px; }
-  .filter-bar { padding: 14px 16px; }
-  .inventory-section { padding: 32px 16px; }
-  .car-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
-  .access-inner { grid-template-columns: 1fr; }
-  .quick-btns { grid-template-columns: 1fr; }
-  .form-row-2 { grid-template-columns: 1fr; }
-  .sns-section, .access-section, .contact-section { padding: 50px 16px; }
-  .modal-specs { grid-template-columns: 1fr 1fr; }
+  .nav-cta { font-size: 12px; padding: 7px 14px; }
+
+  .hero { padding: 56px 16px 48px; }
+  .hero h1 { font-size: 36px; }
+  .hero-sub { font-size: 13px; }
+  .hero-stats { gap: 8px; }
+  .stat { padding: 10px 14px; }
+  .stat-num { font-size: 24px; }
+  .stat-label { font-size: 10px; }
+
+  .filter-bar { padding: 10px 12px; gap: 6px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+  .filter-btn { font-size: 12px; padding: 7px 14px; white-space: nowrap; flex-shrink: 0; }
+  .filter-label { display: none; }
+
+  .inventory-section { padding: 24px 12px; }
+  .section-title { font-size: 18px; }
+  .car-grid { grid-template-columns: 1fr; gap: 14px; }
+  .card-img { height: 200px; }
+  .car-name { font-size: 17px; }
+  .car-price { font-size: 26px; }
+  .btn-inquiry { font-size: 14px; padding: 13px; }
+  .btn-line { padding: 13px 16px; font-size: 18px; }
+
+  .kaitori-section { padding: 40px 16px; }
+  .kaitori-header h2 { font-size: 22px; }
+  .kaitori-cards { grid-template-columns: 1fr; }
+  .kaitori-card { padding: 28px 20px; }
+  .flow-steps { gap: 0; row-gap: 8px; }
+  .flow-arrow { display: none; }
+  .flow-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .flow-step { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px 4px; }
+
+  .instagram-section { padding: 40px 16px; }
+  .instagram-header h2 { font-size: 22px; }
+  .snapwidget-wrap { padding: 14px; }
+  .ig-thumb { min-height: 90px; font-size: 22px; }
+
+  .sns-section { padding: 40px 16px; }
+  .sns-section h2 { font-size: 22px; }
+  .sns-cards { gap: 10px; }
+  .sns-card { padding: 20px 24px; min-width: 120px; }
+
+  .access-section { padding: 40px 16px; }
+  .access-inner { grid-template-columns: 1fr; gap: 28px; }
+  .map-wrap { height: 220px; }
+  .access-info h3 { font-size: 18px; }
+
+  .contact-section { padding: 40px 16px; }
+  .contact-header h2 { font-size: 22px; }
+  .quick-btn { font-size: 15px !important; padding: 16px !important; }
+
+  .modal { padding: 20px 16px; }
+  .modal h3 { font-size: 18px; }
+  .modal-price { font-size: 26px; }
+  .modal-specs { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .modal-spec { padding: 10px 12px; }
+
+  footer { padding: 32px 16px; }
+  footer .footer-logo { font-size: 18px; }
+  footer p { font-size: 11px; }
 }
-@media (max-width: 480px) {
+
+@media (max-width: 380px) {
+  .hero h1 { font-size: 30px; }
   .car-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; align-items: center; }
+  .stat { width: 100%; text-align: center; }
 }
 </style>
 </head>
@@ -1101,7 +1154,1173 @@ footer .footer-logo {
 <!-- FILTER -->
 <div class="filter-bar" id="inventory">
   <span class="filter-label">絞り込み：</span>
-  <button class="filter-btn active" onclick="filterCars('all', this)">すべて</button>
+  <button class="filter-btn active" data-type="all" onclick="filterCars('all', this)">すべて</button>
+  <button class="filter-btn" onclick="filterCars('kei', this)">軽自動車</button>
+  <button class="filter-btn" onclick="filterCars('compact', this)">コンパクト</button>
+  <button class="filter-btn" onclick="filterCars('minivan', this)">ミニバン</button>
+  <button class="filter-btn" onclick="filterCars('suv', this)">SUV・4WD</button>
+</div>
+
+<!-- INVENTORY GRID -->
+<section class="inventory-section">
+  <h2 class="section-title">🚗 在庫車両一覧</h2>
+  <div class="car-grid" id="carGrid"></div>PE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在庫車両一覧 | 北斗自動車</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Noto+Sans+JP:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FF6B2B;
+  --orange-light: #FF8F5E;
+  --orange-pale: #FFF0E8;
+  --yellow: #FFD23F;
+  --yellow-light: #FFF4C2;
+  --white: #ffffff;
+  --off-white: #FFFBF7;
+  --dark: #2B1F14;
+  --gray: #7A6A5A;
+  --gray-light: #F0EBE3;
+  --green: #2ECC71;
+  --radius: 16px;
+  --shadow: 0 4px 24px rgba(43,31,20,0.10);
+  --shadow-hover: 0 12px 40px rgba(255,107,43,0.20);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--off-white);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+header {
+  position: sticky;
+  top: 0; z-index: 100;
+  background: var(--white);
+  box-shadow: 0 2px 16px rgba(43,31,20,0.08);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  width: 38px; height: 38px;
+  background: var(--orange);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.logo-text {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 18px;
+  color: var(--dark);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+.logo-text small {
+  display: block;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 10px;
+  color: var(--gray);
+  font-weight: 400;
+  letter-spacing: 0.15em;
+}
+
+nav { display: flex; gap: 6px; }
+nav a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+nav a:hover { background: var(--orange-pale); color: var(--orange); }
+nav .nav-cta {
+  background: var(--orange);
+  color: white;
+  padding: 8px 18px;
+}
+nav .nav-cta:hover { background: var(--orange-light); color: white; }
+
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(135deg, var(--orange) 0%, #FF8C42 40%, var(--yellow) 100%);
+  padding: 70px 32px 80px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -40px;
+  width: 250px; height: 250px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  color: white;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  padding: 6px 18px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  animation: popIn 0.5s ease both;
+}
+
+.hero h1 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: clamp(36px, 7vw, 68px);
+  color: white;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  animation: popIn 0.5s 0.1s ease both;
+}
+.hero h1 .accent {
+  background: var(--yellow);
+  color: var(--dark);
+  padding: 0 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.88);
+  margin-top: 16px;
+  font-weight: 500;
+  animation: popIn 0.5s 0.2s ease both;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  animation: popIn 0.5s 0.3s ease both;
+}
+.stat {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 16px 28px;
+  color: white;
+}
+.stat-num {
+  font-family: 'Nunito', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+}
+.stat-num span { font-size: 16px; }
+.stat-label { font-size: 11px; opacity: 0.85; margin-top: 4px; letter-spacing: 0.1em; }
+
+/* ===== FILTER ===== */
+.filter-bar {
+  background: var(--white);
+  padding: 20px 32px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--gray-light);
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+}
+
+.filter-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray);
+  letter-spacing: 0.1em;
+  margin-right: 4px;
+}
+
+.filter-btn {
+  border: 2px solid var(--gray-light);
+  background: white;
+  color: var(--gray);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+  border-color: var(--orange);
+  background: var(--orange-pale);
+  color: var(--orange);
+}
+
+/* ===== GRID ===== */
+.inventory-section {
+  padding: 48px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 22px;
+  color: var(--dark);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, var(--orange-pale), transparent);
+}
+
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.car-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+  position: relative;
+}
+.car-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-img {
+  height: 188px;
+  background: var(--gray-light);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--gray);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.card-img svg { opacity: 0.4; }
+
+.card-img-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  font-size: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-new {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: var(--orange);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.badge-recommend {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: var(--yellow);
+  color: var(--dark);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 32px; height: 32px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: transform 0.15s;
+}
+.fav-btn:hover { transform: scale(1.2); }
+.fav-btn.active { background: #FFF0E8; }
+
+.card-body {
+  padding: 18px 20px 20px;
+}
+
+.car-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dark);
+  line-height: 1.3;
+}
+.car-grade {
+  font-size: 12px;
+  color: var(--gray);
+  margin-top: 2px;
+}
+
+.car-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+.tag-year { background: var(--yellow-light); color: #8B6A00; }
+.tag-km   { background: #E8F5E9; color: #2E7D32; }
+.tag-at   { background: #E3F0FF; color: #1565C0; }
+.tag-2wd  { background: var(--gray-light); color: var(--gray); }
+.tag-4wd  { background: #F3E8FF; color: #6A1B9A; }
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gray-light);
+}
+
+.car-price {
+  font-family: 'Nunito', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--orange);
+  line-height: 1;
+}
+.car-price small {
+  font-size: 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--gray);
+  font-weight: 400;
+}
+
+.car-inspection {
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-action {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.btn-inquiry {
+  flex: 1;
+  background: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 11px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  letter-spacing: 0.05em;
+}
+.btn-inquiry:hover { background: var(--orange-light); }
+
+.btn-line {
+  background: #06C755;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-line:hover { opacity: 0.85; }
+
+/* ===== SNS ===== */
+.sns-section {
+  background: linear-gradient(135deg, #FFF4C2, #FFE0CC);
+  padding: 60px 32px;
+  text-align: center;
+}
+
+.sns-section h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 28px;
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+.sns-section p {
+  color: var(--gray);
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.sns-cards {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sns-card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--dark);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-width: 160px;
+}
+.sns-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+.sns-card .sns-icon { font-size: 36px; }
+.sns-card .sns-name { font-weight: 700; font-size: 14px; }
+.sns-card .sns-handle { font-size: 11px; color: var(--gray); }
+.sns-card.line-card .sns-icon { font-size: 32px; }
+
+/* ===== ACCESS ===== */
+.access-section {
+  background: var(--white);
+  padding: 70px 32px;
+}
+
+.access-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.access-info h3 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 22px;
+  color: var(--dark);
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+.info-icon {
+  width: 36px; height: 36px;
+  background: var(--orange-pale);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.info-text {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--dark);
+}
+.info-text strong { display: block; font-size: 11px; color: var(--gray); margin-bottom: 2px; letter-spacing: 0.1em; }
+
+.map-wrap {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  height: 280px;
+}
+.map-wrap iframe { width: 100%; height: 100%; border: none; }
+
+/* ===== CONTACT ===== */
+.contact-section {
+  background: var(--off-white);
+  padding: 70px 32px;
+}
+
+.contact-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.contact-header h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 28px;
+  color: var(--dark);
+}
+.contact-header p {
+  color: var(--gray);
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.7;
+}
+
+.quick-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.quick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.quick-btn:hover { transform: translateY(-2px); }
+.quick-btn-line { background: #06C755; color: white; }
+.quick-btn-ig { background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045); color: white; }
+
+.divider {
+  text-align: center;
+  color: var(--gray);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  margin: 24px 0;
+  position: relative;
+}
+.divider::before, .divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--gray-light);
+}
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+.form-card {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+}
+
+.form-row { margin-bottom: 18px; }
+.form-row label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.form-row label .req {
+  color: var(--orange);
+  margin-left: 4px;
+  font-size: 11px;
+}
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  background: var(--off-white);
+  border: 2px solid var(--gray-light);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  color: var(--dark);
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: var(--orange);
+  background: white;
+}
+.form-row textarea { height: 120px; resize: vertical; }
+
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--orange), #FF8C42);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(255,107,43,0.3);
+  margin-top: 8px;
+}
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,107,43,0.4);
+}
+
+.success-banner {
+  display: none;
+  background: #E8F5E9;
+  border: 2px solid var(--green);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  color: #2E7D32;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 16px;
+}
+
+/* ===== KAITORI ===== */
+.kaitori-section {
+  background: var(--dark);
+  padding: 70px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.kaitori-section::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,210,63,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.kaitori-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+.kaitori-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.kaitori-header h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 32px;
+  color: var(--white);
+}
+.kaitori-header h2 span {
+  color: var(--yellow);
+}
+.kaitori-header p {
+  color: rgba(255,255,255,0.55);
+  font-size: 14px;
+  margin-top: 10px;
+  line-height: 1.8;
+}
+.kaitori-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.kaitori-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,210,63,0.2);
+  border-radius: 20px;
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, background 0.3s;
+}
+.kaitori-card:hover {
+  border-color: rgba(255,210,63,0.5);
+  background: rgba(255,255,255,0.08);
+}
+.kaitori-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--yellow));
+}
+.kaitori-emoji {
+  font-size: 44px;
+  margin-bottom: 16px;
+  display: block;
+}
+.kaitori-card h3 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 20px;
+  color: var(--yellow);
+  margin-bottom: 10px;
+}
+.kaitori-card p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.kaitori-points {
+  list-style: none;
+  margin-bottom: 24px;
+}
+.kaitori-points li {
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kaitori-points li::before {
+  content: '✓';
+  color: var(--yellow);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.btn-kaitori {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  color: var(--dark);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 24px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(255,210,63,0.25);
+}
+.btn-kaitori:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,210,63,0.35);
+}
+.kaitori-flow {
+  margin-top: 48px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+  padding: 28px 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.kaitori-flow h4 {
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: var(--yellow);
+  margin-bottom: 20px;
+  text-align: center;
+}
+.flow-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 100px;
+}
+.flow-step-num {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--dark);
+}
+.flow-step-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  line-height: 1.4;
+}
+.flow-arrow {
+  color: rgba(255,255,255,0.2);
+  font-size: 20px;
+  padding: 0 4px;
+  margin-bottom: 18px;
+}
+
+
+/* ===== INSTAGRAM GRID ===== */
+.ig-cell {
+  text-decoration: none;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.ig-thumb {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 28px;
+  transition: opacity 0.2s;
+  min-height: 120px;
+}
+.ig-thumb:hover { opacity: 0.85; }
+.ig-label {
+  font-size: 11px;
+  color: white;
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.1em;
+}
+/* ===== INSTAGRAM ===== */
+.instagram-section {
+  background: var(--off-white);
+  padding: 70px 32px;
+}
+.instagram-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+.instagram-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.instagram-header h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 28px;
+  color: var(--dark);
+}
+.instagram-header p {
+  color: var(--gray);
+  font-size: 14px;
+  margin-top: 8px;
+}
+.instagram-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 16px;
+  background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.snapwidget-wrap {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+.snapwidget-note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 16px;
+  line-height: 1.7;
+}
+.snapwidget-note a { color: var(--orange); }
+/* placeholder grid shown before widget loads */
+.ig-placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.ig-placeholder-cell {
+  aspect-ratio: 1;
+  background: var(--gray-light);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--gray);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.ig-placeholder-cell .ig-icon { font-size: 24px; opacity: 0.4; }
+
+@media (max-width: 768px) {
+  .kaitori-cards { grid-template-columns: 1fr; }
+  .kaitori-section, .instagram-section { padding: 50px 16px; }
+  .flow-steps { gap: 0; }
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 40px 32px;
+  font-size: 12px;
+  line-height: 2;
+}
+footer .footer-logo {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 22px;
+  color: var(--yellow);
+  margin-bottom: 10px;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.fade-up {
+  opacity: 1;
+  transform: none;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  padding: 32px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: var(--gray-light);
+  border: none;
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal h3 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 20px;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+.modal-grade { font-size: 13px; color: var(--gray); margin-bottom: 20px; }
+.modal-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.modal-spec { background: var(--off-white); border-radius: 10px; padding: 12px 14px; }
+.modal-spec-label { font-size: 10px; color: var(--gray); letter-spacing: 0.1em; }
+.modal-spec-value { font-size: 14px; font-weight: 700; color: var(--dark); margin-top: 2px; }
+.modal-price { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 800; color: var(--orange); margin-bottom: 20px; }
+.modal-price small { font-size: 14px; color: var(--gray); font-family: 'Noto Sans JP', sans-serif; font-weight: 400; }
+.modal-actions { display: flex; gap: 10px; }
+.modal-btn-main { flex: 1; background: var(--orange); color: white; border: none; border-radius: 12px; padding: 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+.modal-btn-line { background: #06C755; color: white; border: none; border-radius: 12px; padding: 14px 20px; cursor: pointer; font-size: 18px; text-decoration: none; display: flex; align-items: center; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  header { padding: 0 16px; height: 56px; }
+  nav a:not(.nav-cta) { display: none; }
+  .nav-cta { font-size: 12px; padding: 7px 14px; }
+
+  .hero { padding: 56px 16px 48px; }
+  .hero h1 { font-size: 36px; }
+  .hero-sub { font-size: 13px; }
+  .hero-stats { gap: 8px; }
+  .stat { padding: 10px 14px; }
+  .stat-num { font-size: 24px; }
+  .stat-label { font-size: 10px; }
+
+  .filter-bar { padding: 10px 12px; gap: 6px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+  .filter-btn { font-size: 12px; padding: 7px 14px; white-space: nowrap; flex-shrink: 0; }
+  .filter-label { display: none; }
+
+  .inventory-section { padding: 24px 12px; }
+  .section-title { font-size: 18px; }
+  .car-grid { grid-template-columns: 1fr; gap: 14px; }
+  .card-img { height: 200px; }
+  .car-name { font-size: 17px; }
+  .car-price { font-size: 26px; }
+  .btn-inquiry { font-size: 14px; padding: 13px; }
+  .btn-line { padding: 13px 16px; font-size: 18px; }
+
+  .kaitori-section { padding: 40px 16px; }
+  .kaitori-header h2 { font-size: 22px; }
+  .kaitori-cards { grid-template-columns: 1fr; }
+  .kaitori-card { padding: 28px 20px; }
+  .flow-steps { gap: 0; row-gap: 8px; }
+  .flow-arrow { display: none; }
+  .flow-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .flow-step { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px 4px; }
+
+  .instagram-section { padding: 40px 16px; }
+  .instagram-header h2 { font-size: 22px; }
+  .snapwidget-wrap { padding: 14px; }
+  .ig-thumb { min-height: 90px; font-size: 22px; }
+
+  .sns-section { padding: 40px 16px; }
+  .sns-section h2 { font-size: 22px; }
+  .sns-cards { gap: 10px; }
+  .sns-card { padding: 20px 24px; min-width: 120px; }
+
+  .access-section { padding: 40px 16px; }
+  .access-inner { grid-template-columns: 1fr; gap: 28px; }
+  .map-wrap { height: 220px; }
+  .access-info h3 { font-size: 18px; }
+
+  .contact-section { padding: 40px 16px; }
+  .contact-header h2 { font-size: 22px; }
+  .quick-btn { font-size: 15px !important; padding: 16px !important; }
+
+  .modal { padding: 20px 16px; }
+  .modal h3 { font-size: 18px; }
+  .modal-price { font-size: 26px; }
+  .modal-specs { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .modal-spec { padding: 10px 12px; }
+
+  footer { padding: 32px 16px; }
+  footer .footer-logo { font-size: 18px; }
+  footer p { font-size: 11px; }
+}
+
+@media (max-width: 380px) {
+  .hero h1 { font-size: 30px; }
+  .car-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; align-items: center; }
+  .stat { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">🚗</div>
+    <div class="logo-text">
+      北斗自動車
+      <small>HOKUTO JIDOUSHA</small>
+    </div>
+  </div>
+  <nav>
+    <a href="#inventory">在庫車両</a>
+    <a href="#kaitori">買取</a>
+    <a href="#access">アクセス</a>
+    <a href="#contact" class="nav-cta">お問い合わせ</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🎉 在庫続々入荷中！</div>
+  <h1>いいクルマ、<br>きっと見つかる。<br><span class="accent">北斗自動車</span></h1>
+  <p class="hero-sub">石川県金沢市の中古車専門店 — 丁寧な接客と安心の品質</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">4<span>台</span></div>
+      <div class="stat-label">現在の在庫台数</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">✓</div>
+      <div class="stat-label">試乗・下取り相談OK</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">LINE</div>
+      <div class="stat-label">LINEで気軽に相談</div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTER -->
+<div class="filter-bar" id="inventory">
+  <span class="filter-label">絞り込み：</span>
+  <button class="filter-btn active" data-type="all" onclick="filterCars('all', this)">すべて</button>
   <button class="filter-btn" onclick="filterCars('kei', this)">軽自動車</button>
   <button class="filter-btn" onclick="filterCars('compact', this)">コンパクト</button>
   <button class="filter-btn" onclick="filterCars('minivan', this)">ミニバン</button>
@@ -1330,23 +2549,17 @@ footer .footer-logo {
         ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
       -->
       <!-- Instagram投稿グリッド -->
-      <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:8px;">
-        <a href="https://www.instagram.com/p/DVXcl4OD1_h/" target="_blank" class="ig-cell">
+      <div style="display:grid; grid-template-columns: repeat(2,1fr); gap:10px;">
+        <a href="https://www.instagram.com/p/DWklnpkj4YC/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
+        <a href="https://www.instagram.com/p/DWicrebD2Yr/" target="_blank" class="ig-cell">
+          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
+        </a>
+        <a href="https://www.instagram.com/p/DWgEKjwj3OS/" target="_blank" class="ig-cell">
           <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
         </a>
         <a href="https://www.instagram.com/p/DWdbWTlD4jb/" target="_blank" class="ig-cell">
-          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
-        </a>
-        <a href="https://www.instagram.com/p/DWQKHdhD6Xu/" target="_blank" class="ig-cell">
-          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
-        </a>
-        <a href="https://www.instagram.com/p/DWFjdtiD8wZ/" target="_blank" class="ig-cell">
-          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
-        </a>
-        <a href="https://www.instagram.com/p/DV7lvX-j9OD/" target="_blank" class="ig-cell">
-          <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
-        </a>
-        <a href="https://www.instagram.com/p/DVQIOs3D_2n/" target="_blank" class="ig-cell">
           <div class="ig-thumb"><span>📸</span><span class="ig-label">投稿を見る</span></div>
         </a>
       </div>
@@ -1450,12 +2663,63 @@ footer .footer-logo {
 
 <script>
 // Car data
-const cars = [
-  { name: 'スバル ステラ', grade: '660 L スマートアシスト キーレス', year: '2014年（H26）', km: '5.3万km', trans: 'CVT', drive: '2WD', color: 'ブラックM', inspection: '2027年3月', price: '¥289,000' },
-  { name: 'スズキ スペーシア', grade: '660 X 4WD スマートキー・プッシュスタート・パワースライド', year: '2013年（H25）', km: '8.5万km', trans: 'CVT', drive: '4WD', color: 'グリーン', inspection: '2026年9月', price: '¥388,000' },
-  { name: 'マツダ AZ-ワゴン', grade: '660 XG', year: '2011年（H23）', km: '2.1万km', trans: 'AT', drive: '2WD', color: 'シルバー', inspection: '車検整備無', price: '¥265,000' },
-  { name: 'ホンダ ライフ', grade: '660 ディーバ', year: '2006年（H18）', km: '6.9万km', trans: 'AT', drive: '2WD', color: 'イエロー', inspection: '2027年11月', price: '¥208,000' },
+const DEFAULT_CARS = [
+  { name: 'スバル ステラ', grade: '660 L スマートアシスト キーレス', year: '2014年（H26）', km: '5.3万km', trans: 'CVT', drive: '2WD', color: 'ブラックM', inspection: '2027年3月', price: '¥289,000', type: 'kei', sold: false },
+  { name: 'スズキ スペーシア', grade: '660 X 4WD スマートキー・プッシュスタート・パワースライド', year: '2013年（H25）', km: '8.5万km', trans: 'CVT', drive: '4WD', color: 'グリーン', inspection: '2026年9月', price: '¥388,000', type: 'kei', sold: false },
+  { name: 'マツダ AZ-ワゴン', grade: '660 XG', year: '2011年（H23）', km: '2.1万km', trans: 'AT', drive: '2WD', color: 'シルバー', inspection: '車検整備無', price: '¥265,000', type: 'kei', sold: false },
+  { name: 'ホンダ ライフ', grade: '660 ディーバ', year: '2006年（H18）', km: '6.9万km', trans: 'AT', drive: '2WD', color: 'イエロー', inspection: '2027年11月', price: '¥208,000', type: 'kei', sold: false },
 ];
+function loadCars() {
+  try { const s = localStorage.getItem('hokuto_cars'); return s ? JSON.parse(s) : DEFAULT_CARS; } catch(e) { return DEFAULT_CARS; }
+}
+function saveCars(data) {
+  localStorage.setItem('hokuto_cars', JSON.stringify(data));
+}
+let cars = loadCars();
+
+function renderCarGrid() {
+  const grid = document.getElementById('carGrid');
+  const activeFilter = document.querySelector('.filter-btn.active')?.dataset?.type || 'all';
+  grid.innerHTML = cars.map((c, i) => {
+    if (activeFilter !== 'all' && c.type !== activeFilter) return '';
+    const inspectionColor = c.inspection === '車検整備無' ? 'color:#f59e0b;' : 'color:var(--green);';
+    const inspectionIcon = c.inspection === '車検整備無' ? '⚠️' : '✅';
+    const soldOverlay = c.sold ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;border-radius:0;"><span style="background:white;color:#374151;font-weight:700;font-size:18px;padding:8px 20px;border-radius:8px;letter-spacing:0.1em;">SOLD</span></div>' : '';
+    return \`
+    <div class="car-card fade-up" data-type="\${c.type}" onclick="openModal(\${i})" style="opacity:1;">
+      <div class="card-img" style="position:relative;">
+        <div class="card-img-bg">🚗</div>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        写真準備中
+        \${soldOverlay}
+        <button class="fav-btn" onclick="toggleFav(event, this)">🤍</button>
+      </div>
+      <div class="card-body">
+        <div class="car-name">\${c.name}</div>
+        <div class="car-grade">\${c.grade}</div>
+        <div class="car-tags">
+          <span class="tag tag-year">\${c.year}</span>
+          <span class="tag tag-km">\${c.km}</span>
+          <span class="tag tag-at">\${c.trans}</span>
+          <span class="tag \${c.drive === '4WD' ? 'tag-4wd' : 'tag-2wd'}">\${c.drive}</span>
+        </div>
+        <div class="card-meta">
+          <div>
+            <div class="car-price">\${c.price}<small>（税込）</small></div>
+            <div class="car-inspection" style="\${inspectionColor}">\${inspectionIcon} 車検 \${c.inspection}</div>
+          </div>
+        </div>
+        <div class="card-action">
+          <button class="btn-inquiry" onclick="scrollToContact(event)">問い合わせる</button>
+          <a href="https://lin.ee/Nxu1UqE" class="btn-line" onclick="event.stopPropagation()" target="_blank">💬</a>
+        </div>
+      </div>
+    </div>\`;
+  }).join('');
+  // Update hero count
+  const countEl = document.querySelector('.stat-num');
+  if (countEl) countEl.innerHTML = cars.filter(c => !c.sold).length + '<span>台</span>';
+}
 
 function openModal(i) {
   const c = cars[i];
@@ -1492,9 +2756,8 @@ function closeModalDirect() {
 function filterCars(type, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.car-card').forEach(card => {
-    card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
-  });
+  btn.dataset.type = type;
+  renderCarGrid();
 }
 
 // Fav
@@ -1520,6 +2783,400 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
 
 // Fade-up on scroll
 // animation removed
+renderCarGrid();
+</script>
+
+<style>
+/* ===== ADMIN PANEL ===== */
+#adminOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 300;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+#adminOverlay.open { display: flex; }
+#adminPanel {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 700px;
+  padding: 28px;
+  margin: auto;
+}
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.admin-header h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 22px;
+  color: #2B1F14;
+}
+.admin-close {
+  background: #F0EBE3;
+  border: none;
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-car-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.admin-car-item {
+  background: #FFFBF7;
+  border: 1px solid #F0EBE3;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.admin-car-info { flex: 1; }
+.admin-car-name { font-weight: 700; font-size: 14px; color: #2B1F14; }
+.admin-car-sub { font-size: 12px; color: #7A6A5A; margin-top: 2px; }
+.admin-car-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn-edit {
+  background: #FFF0E8;
+  color: #FF6B2B;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.btn-delete {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.btn-sold-toggle {
+  background: #E8F5E9;
+  color: #2E7D32;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.btn-sold-toggle.is-sold {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+.admin-form {
+  background: #FFFBF7;
+  border: 1px solid #F0EBE3;
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 16px;
+}
+.admin-form h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2B1F14;
+  margin-bottom: 16px;
+}
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.admin-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7A6A5A;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+}
+.admin-field input,
+.admin-field select {
+  width: 100%;
+  background: white;
+  border: 1.5px solid #F0EBE3;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 13px;
+  color: #2B1F14;
+  outline: none;
+  -webkit-appearance: none;
+}
+.admin-field input:focus,
+.admin-field select:focus { border-color: #FF6B2B; }
+.admin-field.full { grid-column: span 2; }
+.btn-save {
+  width: 100%;
+  background: linear-gradient(135deg, #FF6B2B, #FF8C42);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.btn-add-new {
+  width: 100%;
+  background: white;
+  border: 2px dashed #FF6B2B;
+  color: #FF6B2B;
+  border-radius: 12px;
+  padding: 13px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.sold-badge {
+  display: inline-block;
+  background: #6B7280;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-left: 6px;
+  letter-spacing: 0.05em;
+}
+.admin-pw {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 20px 0;
+}
+.admin-pw input {
+  width: 100%;
+  max-width: 300px;
+  border: 2px solid #F0EBE3;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 16px;
+  text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  outline: none;
+}
+.admin-pw input:focus { border-color: #FF6B2B; }
+.admin-pw-title { font-size: 16px; font-weight: 700; color: #2B1F14; }
+.admin-pw-btn {
+  background: #FF6B2B;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 32px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-field.full { grid-column: span 1; }
+  #adminPanel { padding: 18px 14px; }
+}
+</style>
+
+<!-- ADMIN OVERLAY -->
+<div id="adminOverlay">
+  <div id="adminPanel">
+    <div id="adminPwScreen">
+      <div class="admin-header"><h2>🔐 管理画面</h2><button class="admin-close" onclick="closeAdmin()">×</button></div>
+      <div class="admin-pw">
+        <div class="admin-pw-title">パスワードを入力してください</div>
+        <input type="password" id="adminPwInput" placeholder="パスワード" onkeydown="if(event.key==='Enter')checkPw()">
+        <button class="admin-pw-btn" onclick="checkPw()">ログイン</button>
+        <div id="adminPwError" style="color:#DC2626; font-size:12px; display:none;">パスワードが違います</div>
+      </div>
+    </div>
+    <div id="adminMain" style="display:none;">
+      <div class="admin-header">
+        <h2>🚗 在庫管理</h2>
+        <button class="admin-close" onclick="closeAdmin()">×</button>
+      </div>
+      <div class="admin-car-list" id="adminCarList"></div>
+      <button class="btn-add-new" onclick="openForm(-1)">＋ 新しい車両を追加</button>
+      <div class="admin-form" id="adminForm" style="display:none;">
+        <h3 id="adminFormTitle">車両を追加</h3>
+        <div class="admin-form-grid">
+          <div class="admin-field full">
+            <label>メーカー・車名</label>
+            <input id="f_name" placeholder="例：スバル ステラ">
+          </div>
+          <div class="admin-field full">
+            <label>グレード</label>
+            <input id="f_grade" placeholder="例：660 L スマートアシスト">
+          </div>
+          <div class="admin-field">
+            <label>年式</label>
+            <input id="f_year" placeholder="例：2014年（H26）">
+          </div>
+          <div class="admin-field">
+            <label>走行距離</label>
+            <input id="f_km" placeholder="例：5.3万km">
+          </div>
+          <div class="admin-field">
+            <label>ミッション</label>
+            <select id="f_trans">
+              <option>CVT</option><option>AT</option><option>MT</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label>駆動</label>
+            <select id="f_drive">
+              <option>2WD</option><option>4WD</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label>車体色</label>
+            <input id="f_color" placeholder="例：ブラックM">
+          </div>
+          <div class="admin-field">
+            <label>車検</label>
+            <input id="f_inspection" placeholder="例：2027年3月">
+          </div>
+          <div class="admin-field">
+            <label>価格（税込）</label>
+            <input id="f_price" placeholder="例：¥289,000">
+          </div>
+          <div class="admin-field">
+            <label>カテゴリ</label>
+            <select id="f_type">
+              <option value="kei">軽自動車</option>
+              <option value="compact">コンパクト</option>
+              <option value="minivan">ミニバン</option>
+              <option value="suv">SUV・4WD</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveForm()">💾 保存する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PW = 'hokuto2024';
+let editingIndex = -1;
+
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('adminForm').style.display = 'none';
+}
+function checkPw() {
+  const pw = document.getElementById('adminPwInput').value;
+  if (pw === ADMIN_PW) {
+    document.getElementById('adminPwScreen').style.display = 'none';
+    document.getElementById('adminMain').style.display = 'block';
+    renderAdminList();
+  } else {
+    document.getElementById('adminPwError').style.display = 'block';
+  }
+}
+
+function renderAdminList() {
+  const list = document.getElementById('adminCarList');
+  list.innerHTML = cars.map((c, i) => `
+    <div class="admin-car-item">
+      <div class="admin-car-info">
+        <div class="admin-car-name">${c.name} ${c.sold ? '<span class="sold-badge">SOLD</span>' : ''}</div>
+        <div class="admin-car-sub">${c.price} / ${c.year} / ${c.km}</div>
+      </div>
+      <div class="admin-car-actions">
+        <button class="btn-sold-toggle ${c.sold ? 'is-sold' : ''}" onclick="toggleSold(${i})">${c.sold ? '販売中に戻す' : '売約済み'}</button>
+        <button class="btn-edit" onclick="openForm(${i})">編集</button>
+        <button class="btn-delete" onclick="deleteCar(${i})">削除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSold(i) {
+  cars[i].sold = !cars[i].sold;
+  saveCars(cars);
+  renderAdminList();
+  renderCarGrid();
+}
+
+function deleteCar(i) {
+  if (!confirm(cars[i].name + ' を削除しますか？')) return;
+  cars.splice(i, 1);
+  saveCars(cars);
+  renderAdminList();
+  renderCarGrid();
+}
+
+function openForm(i) {
+  editingIndex = i;
+  const form = document.getElementById('adminForm');
+  form.style.display = 'block';
+  document.getElementById('adminFormTitle').textContent = i === -1 ? '＋ 新しい車両を追加' : '✏️ 車両を編集';
+  const c = i === -1 ? {} : cars[i];
+  document.getElementById('f_name').value = c.name || '';
+  document.getElementById('f_grade').value = c.grade || '';
+  document.getElementById('f_year').value = c.year || '';
+  document.getElementById('f_km').value = c.km || '';
+  document.getElementById('f_trans').value = c.trans || 'CVT';
+  document.getElementById('f_drive').value = c.drive || '2WD';
+  document.getElementById('f_color').value = c.color || '';
+  document.getElementById('f_inspection').value = c.inspection || '';
+  document.getElementById('f_price').value = c.price || '';
+  document.getElementById('f_type').value = c.type || 'kei';
+  form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function saveForm() {
+  const newCar = {
+    name: document.getElementById('f_name').value,
+    grade: document.getElementById('f_grade').value,
+    year: document.getElementById('f_year').value,
+    km: document.getElementById('f_km').value,
+    trans: document.getElementById('f_trans').value,
+    drive: document.getElementById('f_drive').value,
+    color: document.getElementById('f_color').value,
+    inspection: document.getElementById('f_inspection').value,
+    price: document.getElementById('f_price').value,
+    type: document.getElementById('f_type').value,
+    sold: editingIndex === -1 ? false : cars[editingIndex].sold,
+  };
+  if (!newCar.name) { alert('車名を入力してください'); return; }
+  if (editingIndex === -1) { cars.push(newCar); } else { cars[editingIndex] = newCar; }
+  saveCars(cars);
+  renderAdminList();
+  renderCarGrid();
+  document.getElementById('adminForm').style.display = 'none';
+  alert('保存しました！');
+}
+
+// Check for admin hash
+if (window.location.hash === '#admin') { openAdmin(); }
+window.addEventListener('hashchange', () => { if (window.location.hash === '#admin') openAdmin(); });
 </script>
 </body>
 </html>
