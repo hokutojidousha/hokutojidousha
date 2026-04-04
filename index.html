@@ -2783,7 +2783,557 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
 
 // Fade-up on scroll
 // animation removed
-renderCarGrid();
+loadFromSheet();
+</script>
+
+<style>
+/* ===== ADMIN PANEL ===== */
+#adminOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 300;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+#adminOverlay.open { display: flex; }
+#adminPanel {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 700px;
+  padding: 28px;
+  margin: auto;
+}
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.admin-header h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 22px;
+  color: #2B1F14;
+}
+.admin-close {
+  background: #F0EBE3;
+  border: none;
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-car-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.admin-car-item {
+  background: #FFFBF7;
+  border: 1px solid #F0EBE3;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.admin-car-info { flex: 1; }
+.admin-car-name { font-weight: 700; font-size: 14px; color: #2B1F14; }
+.admin-car-sub { font-size: 12px; color: #7A6A5A; margin-top: 2px; }
+.admin-car-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn-edit {
+  background: #FFF0E8;
+  color: #FF6B2B;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.btn-delete {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.btn-sold-toggle {
+  background: #E8F5E9;
+  color: #2E7D32;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.btn-sold-toggle.is-sold {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+.admin-form {
+  background: #FFFBF7;
+  border: 1px solid #F0EBE3;
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 16px;
+}
+.admin-form h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2B1F14;
+  margin-bottom: 16px;
+}
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.admin-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7A6A5A;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+}
+.admin-field input,
+.admin-field select {
+  width: 100%;
+  background: white;
+  border: 1.5px solid #F0EBE3;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 13px;
+  color: #2B1F14;
+  outline: none;
+  -webkit-appearance: none;
+}
+.admin-field input:focus,
+.admin-field select:focus { border-color: #FF6B2B; }
+.admin-field.full { grid-column: span 2; }
+.btn-save {
+  width: 100%;
+  background: linear-gradient(135deg, #FF6B2B, #FF8C42);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.btn-add-new {
+  width: 100%;
+  background: white;
+  border: 2px dashed #FF6B2B;
+  color: #FF6B2B;
+  border-radius: 12px;
+  padding: 13px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.sold-badge {
+  display: inline-block;
+  background: #6B7280;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-left: 6px;
+  letter-spacing: 0.05em;
+}
+.admin-pw {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 20px 0;
+}
+.admin-pw input {
+  width: 100%;
+  max-width: 300px;
+  border: 2px solid #F0EBE3;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 16px;
+  text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  outline: none;
+}
+.admin-pw input:focus { border-color: #FF6B2B; }
+.admin-pw-title { font-size: 16px; font-weight: 700; color: #2B1F14; }
+.admin-pw-btn {
+  background: #FF6B2B;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 32px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-field.full { grid-column: span 1; }
+  #adminPanel { padding: 18px 14px; }
+}
+</style>
+
+<!-- ADMIN OVERLAY -->
+<div id="adminOverlay">
+  <div id="adminPanel">
+    <div id="adminPwScreen">
+      <div class="admin-header"><h2>🔐 管理画面</h2><button class="admin-close" onclick="closeAdmin()">×</button></div>
+      <div class="admin-pw">
+        <div class="admin-pw-title">パスワードを入力してください</div>
+        <input type="password" id="adminPwInput" placeholder="パスワード" onkeydown="if(event.key==='Enter')checkPw()">
+        <button class="admin-pw-btn" onclick="checkPw()">ログイン</button>
+        <div id="adminPwError" style="color:#DC2626; font-size:12px; display:none;">パスワードが違います</div>
+      </div>
+    </div>
+    <div id="adminMain" style="display:none;">
+      <div class="admin-header">
+        <h2>🚗 在庫管理</h2>
+        <button class="admin-close" onclick="closeAdmin()">×</button>
+      </div>
+      <div class="admin-car-list" id="adminCarList"></div>
+      <button class="btn-add-new" onclick="openForm(-1)">＋ 新しい車両を追加</button>
+      <div class="admin-form" id="adminForm" style="display:none;">
+        <h3 id="adminFormTitle">車両を追加</h3>
+        <div class="admin-form-grid">
+          <div class="admin-field full">
+            <label>メーカー・車名</label>
+            <input id="f_name" placeholder="例：スバル ステラ">
+          </div>
+          <div class="admin-field full">
+            <label>グレード</label>
+            <input id="f_grade" placeholder="例：660 L スマートアシスト">
+          </div>
+          <div class="admin-field">
+            <label>年式</label>
+            <input id="f_year" placeholder="例：2014年（H26）">
+          </div>
+          <div class="admin-field">
+            <label>走行距離</label>
+            <input id="f_km" placeholder="例：5.3万km">
+          </div>
+          <div class="admin-field">
+            <label>ミッション</label>
+            <select id="f_trans">
+              <option>CVT</option><option>AT</option><option>MT</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label>駆動</label>
+            <select id="f_drive">
+              <option>2WD</option><option>4WD</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label>車体色</label>
+            <input id="f_color" placeholder="例：ブラックM">
+          </div>
+          <div class="admin-field">
+            <label>車検</label>
+            <input id="f_inspection" placeholder="例：2027年3月">
+          </div>
+          <div class="admin-field">
+            <label>価格（税込）</label>
+            <input id="f_price" placeholder="例：¥289,000">
+          </div>
+          <div class="admin-field">
+            <label>カテゴリ</label>
+            <select id="f_type">
+              <option value="kei">軽自動車</option>
+              <option value="compact">コンパクト</option>
+              <option value="minivan">ミニバン</option>
+              <option value="suv">SUV・4WD</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveForm()">💾 保存する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PW = 'hokuto2024';
+let editingIndex = -1;
+
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('adminForm').style.display = 'none';
+}
+function checkPw() {
+  const pw = document.getElementById('adminPwInput').value;
+  if (pw === ADMIN_PW) {
+    document.getElementById('adminPwScreen').style.display = 'none';
+    document.getElementById('adminMain').style.display = 'block';
+    renderAdminList();
+  } else {
+    document.getElementById('adminPwError').style.display = 'block';
+  }
+}
+
+function renderAdminList() {
+  const list = document.getElementById('adminCarList');
+  list.innerHTML = cars.map((c, i) => `
+    <div class="admin-car-item">
+      <div class="admin-car-info">
+        <div class="admin-car-name">${c.name} ${c.sold ? '<span class="sold-badge">SOLD</span>' : ''}</div>
+        <div class="admin-car-sub">${c.price} / ${c.year} / ${c.km}</div>
+      </div>
+      <div class="admin-car-actions">
+        <button class="btn-sold-toggle ${c.sold ? 'is-sold' : ''}" onclick="toggleSold(${i})">${c.sold ? '販売中に戻す' : '売約済み'}</button>
+        <button class="btn-edit" onclick="openForm(${i})">編集</button>
+        <button class="btn-delete" onclick="deleteCar(${i})">削除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSold(i) {
+  cars[i].sold = !cars[i].sold;
+  saveCars(cars);
+  renderAdminList();
+  renderCarGrid();
+}
+
+function deleteCar(i) {
+  if (!confirm(cars[i].name + ' を削除しますか？')) return;
+  cars.splice(i, 1);
+  saveCars(cars);
+  renderAdminList();
+  renderCarGrid();
+}
+
+function openForm(i) {
+  editingIndex = i;
+  const form = document.getElementById('adminForm');
+  form.style.display = 'block';
+  document.getElementById('adminFormTitle').textContent = i === -1 ? '＋ 新しい車両を追加' : '✏️ 車両を編集';
+  const c = i === -1 ? {} : cars[i];
+  document.getElementById('f_name').value = c.name || '';
+  document.getElementById('f_grade').value = c.grade || '';
+  document.getElementById('f_year').value = c.year || '';
+  document.getElementById('f_km').value = c.km || '';
+  document.getElementById('f_trans').value = c.trans || 'CVT';
+  document.getElementById('f_drive').value = c.drive || '2WD';
+  document.getElementById('f_color').value = c.color || '';
+  document.getElementById('f_inspection').value = c.inspection || '';
+  document.getElementById('f_price').value = c.price || '';
+  document.getElementById('f_type').value = c.type || 'kei';
+  form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function saveForm() {
+  const newCar = {
+    name: document.getElementById('f_name').value,
+    grade: document.getElementById('f_grade').value,
+    year: document.getElementById('f_year').value,
+    km: document.getElementById('f_km').value,
+    trans: document.getElementById('f_trans').value,
+    drive: document.getElementById('f_drive').value,
+    color: document.getElementById('f_color').value,
+    inspection: document.getElementById('f_inspection').value,
+    price: document.getElementById('f_price').value,
+    type: document.getElementById('f_type').value,
+    sold: editingIndex === -1 ? false : cars[editingIndex].sold,
+  };
+  if (!newCar.name) { alert('車名を入力してください'); return; }
+  if (editingIndex === -1) { cars.push(newCar); } else { cars[editingIndex] = newCar; }
+  saveCars(cars);
+  renderAdminList();
+  renderCarGrid();
+  document.getElementById('adminForm').style.display = 'none';
+  alert('保存しました！');
+}
+
+// Check for admin hash
+if (window.location.hash === '#admin') { openAdmin(); }
+window.addEventListener('hashchange', () => { if (window.location.hash === '#admin') openAdmin(); });
+</script>
+</body>
+</html>// ===== 在庫データ管理（Googleスプレッドシート連携） =====
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRtVtiCpLY8mNa8kOuCd-Jv_zMP7iWN1eCF9ysz72PamQRVE35bMsyBkDf8_VV-vkm1M0QQ-YxlbYiv/pub?output=csv';
+
+const DEFAULT_CARS = [
+  { name: 'スバル ステラ', grade: '660 L スマートアシスト キーレス', year: '2014年（H26）', km: '5.3万km', trans: 'CVT', drive: '2WD', color: 'ブラックM', inspection: '2027年3月', price: '¥289,000', type: 'kei', sold: false },
+  { name: 'スズキ スペーシア', grade: '660 X 4WD スマートキー・パワースライド', year: '2013年（H25）', km: '8.5万km', trans: 'CVT', drive: '4WD', color: 'グリーン', inspection: '2026年9月', price: '¥388,000', type: 'kei', sold: false },
+  { name: 'マツダ AZ-ワゴン', grade: '660 XG', year: '2011年（H23）', km: '2.1万km', trans: 'AT', drive: '2WD', color: 'シルバー', inspection: '車検整備無', price: '¥265,000', type: 'kei', sold: false },
+  { name: 'ホンダ ライフ', grade: '660 ディーバ', year: '2006年（H18）', km: '6.9万km', trans: 'AT', drive: '2WD', color: 'イエロー', inspection: '2027年11月', price: '¥208,000', type: 'kei', sold: false },
+];
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  return lines.slice(1).map(line => {
+    const vals = [];
+    let cur = '', inQ = false;
+    for (let ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    vals.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => {
+      let v = (vals[i] || '').replace(/^"|"$/g, '');
+      if (h === 'sold') v = v === 'TRUE' || v === 'true' || v === '1';
+      obj[h] = v;
+    });
+    return obj;
+  }).filter(r => r.name);
+}
+
+let cars = DEFAULT_CARS;
+
+async function loadFromSheet() {
+  try {
+    const res = await fetch(SHEET_CSV_URL);
+    const text = await res.text();
+    const parsed = parseCSV(text);
+    if (parsed.length > 0) {
+      cars = parsed;
+    }
+  } catch(e) {
+    console.warn('スプレッドシート読み込み失敗、デフォルトデータを使用');
+  }
+  renderCarGrid();
+}
+
+function renderCarGrid() {
+  const grid = document.getElementById('carGrid');
+  const activeFilter = document.querySelector('.filter-btn.active')?.dataset?.type || 'all';
+  grid.innerHTML = cars.map((c, i) => {
+    if (activeFilter !== 'all' && c.type !== activeFilter) return '';
+    const inspectionColor = c.inspection === '車検整備無' ? 'color:#f59e0b;' : 'color:var(--green);';
+    const inspectionIcon = c.inspection === '車検整備無' ? '⚠️' : '✅';
+    const soldOverlay = c.sold ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;border-radius:0;"><span style="background:white;color:#374151;font-weight:700;font-size:18px;padding:8px 20px;border-radius:8px;letter-spacing:0.1em;">SOLD</span></div>' : '';
+    return \`
+    <div class="car-card fade-up" data-type="\${c.type}" onclick="openModal(\${i})" style="opacity:1;">
+      <div class="card-img" style="position:relative;">
+        <div class="card-img-bg">🚗</div>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        写真準備中
+        \${soldOverlay}
+        <button class="fav-btn" onclick="toggleFav(event, this)">🤍</button>
+      </div>
+      <div class="card-body">
+        <div class="car-name">\${c.name}</div>
+        <div class="car-grade">\${c.grade}</div>
+        <div class="car-tags">
+          <span class="tag tag-year">\${c.year}</span>
+          <span class="tag tag-km">\${c.km}</span>
+          <span class="tag tag-at">\${c.trans}</span>
+          <span class="tag \${c.drive === '4WD' ? 'tag-4wd' : 'tag-2wd'}">\${c.drive}</span>
+        </div>
+        <div class="card-meta">
+          <div>
+            <div class="car-price">\${c.price}<small>（税込）</small></div>
+            <div class="car-inspection" style="\${inspectionColor}">\${inspectionIcon} 車検 \${c.inspection}</div>
+          </div>
+        </div>
+        <div class="card-action">
+          <button class="btn-inquiry" onclick="scrollToContact(event)">問い合わせる</button>
+          <a href="https://lin.ee/Nxu1UqE" class="btn-line" onclick="event.stopPropagation()" target="_blank">💬</a>
+        </div>
+      </div>
+    </div>\`;
+  }).join('');
+  // Update hero count
+  const countEl = document.querySelector('.stat-num');
+  if (countEl) countEl.innerHTML = cars.filter(c => !c.sold).length + '<span>台</span>';
+}
+
+function openModal(i) {
+  const c = cars[i];
+  document.getElementById('modalBody').innerHTML = `
+    <h3>${c.name}</h3>
+    <p class="modal-grade">${c.grade}</p>
+    <div class="modal-price">${c.price}<small>（税込）</small></div>
+    <div class="modal-specs">
+      <div class="modal-spec"><div class="modal-spec-label">年式</div><div class="modal-spec-value">${c.year}</div></div>
+      <div class="modal-spec"><div class="modal-spec-label">走行距離</div><div class="modal-spec-value">${c.km}</div></div>
+      <div class="modal-spec"><div class="modal-spec-label">ミッション</div><div class="modal-spec-value">${c.trans}</div></div>
+      <div class="modal-spec"><div class="modal-spec-label">駆動</div><div class="modal-spec-value">${c.drive}</div></div>
+      <div class="modal-spec"><div class="modal-spec-label">車体色</div><div class="modal-spec-value">${c.color}</div></div>
+      <div class="modal-spec"><div class="modal-spec-label">車検</div><div class="modal-spec-value">${c.inspection}まで</div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-main" onclick="scrollToContact(); closeModalDirect()">📨 問い合わせる</button>
+      <a href="https://lin.ee/Nxu1UqE" class="modal-btn-line" target="_blank">💬</a>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Filter
+function filterCars(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.dataset.type = type;
+  renderCarGrid();
+}
+
+// Fav
+function toggleFav(e, btn) {
+  e.stopPropagation();
+  btn.classList.toggle('active');
+  btn.textContent = btn.classList.contains('active') ? '❤️' : '🤍';
+}
+
+// Scroll to contact
+function scrollToContact(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Form
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  document.getElementById('successBanner').style.display = 'block';
+  this.reset();
+  setTimeout(() => { document.getElementById('successBanner').style.display = 'none'; }, 6000);
+});
+
+// Fade-up on scroll
+// animation removed
+loadFromSheet();
 </script>
 
 <style>
