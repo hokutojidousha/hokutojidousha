@@ -609,15 +609,23 @@ function parseCSV(text) {
 }
 
 async function loadFromSheet() {
+  // まずデフォルトデータで即表示
+  renderCarGrid();
+  // バックグラウンドでスプレッドシートを読み込み
   try {
-    const res = await fetch(SHEET_CSV_URL);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(SHEET_CSV_URL, { signal: controller.signal });
+    clearTimeout(timer);
     const text = await res.text();
     const parsed = parseCSV(text);
-    if (parsed.length > 0) cars = parsed;
+    if (parsed.length > 0) {
+      cars = parsed;
+      renderCarGrid();
+    }
   } catch(e) {
-    console.warn('スプレッドシート読み込み失敗');
+    console.warn('スプレッドシート読み込み失敗、デフォルトデータを表示中');
   }
-  renderCarGrid();
 }
 
 function renderCarGrid() {
