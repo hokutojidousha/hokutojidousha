@@ -577,117 +577,95 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRtVtiCpLY8mNa8kOuCd-Jv_zMP7iWN1eCF9ysz72PamQRVE35bMsyBkDf8_VV-vkm1M0QQ-YxlbYiv/pub?output=csv';
 
 const DEFAULT_CARS = [
-  { name:'スバル ステラ', grade:'660 L スマートアシスト キーレス', year:'2014年（H26）', km:'5.3万km', trans:'CVT', drive:'2WD', color:'ブラックM', inspection:'2027年3月', price:'¥289,000', type:'kei', sold:false },
-  { name:'スズキ スペーシア', grade:'660 X 4WD スマートキー・パワースライド', year:'2013年（H25）', km:'8.5万km', trans:'CVT', drive:'4WD', color:'グリーン', inspection:'2026年9月', price:'¥388,000', type:'kei', sold:false },
-  { name:'マツダ AZ-ワゴン', grade:'660 XG', year:'2011年（H23）', km:'2.1万km', trans:'AT', drive:'2WD', color:'シルバー', inspection:'車検整備無', price:'¥265,000', type:'kei', sold:false },
-  { name:'ホンダ ライフ', grade:'660 ディーバ', year:'2006年（H18）', km:'6.9万km', trans:'AT', drive:'2WD', color:'イエロー', inspection:'2027年11月', price:'¥208,000', type:'kei', sold:false },
+  { name:'スバル ステラ', grade:'660 L スマートアシスト キーレス', year:'2014年（H26）', km:'5.3万km', trans:'CVT', drive:'2WD', color:'ブラックM', inspection:'2027年3月', price:'¥289,000', type:'kei', sold:false, image:'' },
+  { name:'スズキ スペーシア', grade:'660 X 4WD スマートキー・パワースライド', year:'2013年（H25）', km:'8.5万km', trans:'CVT', drive:'4WD', color:'グリーン', inspection:'2026年9月', price:'¥388,000', type:'kei', sold:false, image:'' },
+  { name:'マツダ AZ-ワゴン', grade:'660 XG', year:'2011年（H23）', km:'2.1万km', trans:'AT', drive:'2WD', color:'シルバー', inspection:'車検整備無', price:'¥265,000', type:'kei', sold:false, image:'' },
+  { name:'ホンダ ライフ', grade:'660 ディーバ', year:'2006年（H18）', km:'6.9万km', trans:'AT', drive:'2WD', color:'イエロー', inspection:'2027年11月', price:'¥208,000', type:'kei', sold:false, image:'' },
 ];
 
 let cars = DEFAULT_CARS;
 let activeType = 'all';
 
+function getDriveImgUrl(url) {
+  if (!url || url.trim() === '') return '';
+  var m = url.match(/\/d\/([^/]+)/);
+  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w600' : '';
+}
+
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).map(line => {
-    const vals = [];
-    let cur = '', inQ = false;
-    for (let ch of line) {
+  var lines = text.trim().split('\n');
+  var headers = lines[0].split(',').map(function(h) { return h.trim().replace(/^"|"$/g,''); });
+  return lines.slice(1).map(function(line) {
+    var vals = [];
+    var cur = '', inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
       if (ch === '"') { inQ = !inQ; }
       else if (ch === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
       else { cur += ch; }
     }
     vals.push(cur.trim());
-    const obj = {};
-    headers.forEach((h, i) => {
-      let v = (vals[i] || '').replace(/^"|"$/g,'');
+    var obj = {};
+    headers.forEach(function(h, i) {
+      var v = (vals[i] || '').replace(/^"|"$/g,'');
       if (h === 'sold') v = (v === 'TRUE' || v === 'true' || v === '1');
       obj[h] = v;
     });
     return obj;
-  }).filter(r => r.name && r.name.trim() !== '');
-}
-
-async function loadFromSheet() {
-  // まずデフォルトデータで即表示
-  renderCarGrid();
-  // バックグラウンドでスプレッドシートを読み込み
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(SHEET_CSV_URL, { signal: controller.signal });
-    clearTimeout(timer);
-    const text = await res.text();
-    const parsed = parseCSV(text);
-    if (parsed.length > 0) {
-      cars = parsed;
-      renderCarGrid();
-    }
-  } catch(e) {
-    console.warn('スプレッドシート読み込み失敗、デフォルトデータを表示中');
-  }
+  }).filter(function(r) { return r.name && r.name.trim() !== ''; });
 }
 
 function renderCarGrid() {
-  const grid = document.getElementById('carGrid');
-  const filtered = cars.filter(c => activeType === 'all' || c.type === activeType);
+  var grid = document.getElementById('carGrid');
+  if (!grid) return;
+  var filtered = cars.filter(function(c) { return activeType === 'all' || c.type === activeType; });
   if (filtered.length === 0) {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray);font-size:14px;">該当する車両がありません</div>';
     return;
   }
-  grid.innerHTML = filtered.map((c, i) => {
-    const idx = cars.indexOf(c);
-    const noShaken = c.inspection === '車検整備無';
-    const inspClass = noShaken ? 'car-inspection no-shaken' : 'car-inspection';
-    const inspIcon = noShaken ? '⚠️' : '✅';
-    // Google Drive URL → thumbnail変換
-    function getDriveImgUrl(url) {
-      if (!url) return '';
-      const m = url.match(/\/d\/([^/]+)/);
-      return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w600' : url;
-    }
-    const imgUrl = c.image ? getDriveImgUrl(c.image) : '';
-    const imgStyle = imgUrl ? 'background:none;' : '';
-    const imgHTML = imgUrl
-      ? '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;" onerror="this.style.display='none'">'
+  var html = '';
+  filtered.forEach(function(c) {
+    var idx = cars.indexOf(c);
+    var noShaken = c.inspection === '車検整備無';
+    var inspClass = noShaken ? 'car-inspection no-shaken' : 'car-inspection';
+    var inspIcon = noShaken ? '⚠️' : '✅';
+    var soldHTML = c.sold ? '<div class="sold-overlay"><div class="sold-label">SOLD</div></div>' : '';
+    var imgUrl = getDriveImgUrl(c.image);
+    var imgContent = imgUrl
+      ? '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;display:block;" onerror="this.style.display='none'">'
       : '<div class="card-img-bg">🚗</div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>写真準備中';
-    const soldHTML = c.sold ? '<div class="sold-overlay"><div class="sold-label">SOLD</div></div>' : '';
-    return `
-    <div class="car-card" data-type="${c.type}" onclick="openModal(${idx})">
-      <div class="card-img" style="${imgStyle}">
-        ${imgHTML}
-        ${soldHTML}
-        <button class="fav-btn" onclick="toggleFav(event,this)">🤍</button>
-      </div>
-      <div class="card-body">
-        <div class="car-name">${c.name}</div>
-        <div class="car-grade">${c.grade}</div>
-        <div class="car-tags">
-          <span class="tag tag-year">${c.year}</span>
-          <span class="tag tag-km">${c.km}</span>
-          <span class="tag tag-at">${c.trans}</span>
-          <span class="tag ${c.drive === '4WD' ? 'tag-4wd' : 'tag-2wd'}">${c.drive}</span>
-        </div>
-        <div class="card-meta">
-          <div>
-            <div class="car-price">${c.price}<small>（税込）</small></div>
-            <div class="${inspClass}">${inspIcon} 車検 ${c.inspection}</div>
-          </div>
-        </div>
-        <div class="card-action">
-          <button class="btn-inquiry" onclick="scrollToContact(event)">問い合わせる</button>
-          <a href="https://lin.ee/Nxu1UqE" class="btn-line" onclick="event.stopPropagation()" target="_blank">💬</a>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  const countEl = document.getElementById('carCount');
-  if (countEl) countEl.innerHTML = cars.filter(c => !c.sold).length + '<span>台</span>';
+    var driveTag = c.drive === '4WD' ? 'tag-4wd' : 'tag-2wd';
+    html += '<div class="car-card" data-type="' + c.type + '" onclick="openModal(' + idx + ')">';
+    html += '<div class="card-img" style="position:relative;">';
+    html += imgContent;
+    html += soldHTML;
+    html += '<button class="fav-btn" onclick="toggleFav(event,this)">🤍</button>';
+    html += '</div>';
+    html += '<div class="card-body">';
+    html += '<div class="car-name">' + c.name + '</div>';
+    html += '<div class="car-grade">' + c.grade + '</div>';
+    html += '<div class="car-tags">';
+    html += '<span class="tag tag-year">' + c.year + '</span>';
+    html += '<span class="tag tag-km">' + c.km + '</span>';
+    html += '<span class="tag tag-at">' + c.trans + '</span>';
+    html += '<span class="tag ' + driveTag + '">' + c.drive + '</span>';
+    html += '</div>';
+    html += '<div class="card-meta"><div>';
+    html += '<div class="car-price">' + c.price + '<small>（税込）</small></div>';
+    html += '<div class="' + inspClass + '">' + inspIcon + ' 車検 ' + c.inspection + '</div>';
+    html += '</div></div>';
+    html += '<div class="card-action">';
+    html += '<button class="btn-inquiry" onclick="scrollToContact(event)">問い合わせる</button>';
+    html += '<a href="https://lin.ee/Nxu1UqE" class="btn-line" onclick="event.stopPropagation()" target="_blank">💬</a>';
+    html += '</div></div></div>';
+  });
+  grid.innerHTML = html;
+  var countEl = document.getElementById('carCount');
+  if (countEl) countEl.innerHTML = cars.filter(function(c) { return !c.sold; }).length + '<span>台</span>';
 }
 
 function filterCars(type, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
   activeType = type;
   renderCarGrid();
@@ -705,23 +683,23 @@ function scrollToContact(e) {
 }
 
 function openModal(i) {
-  const c = cars[i];
-  document.getElementById('modalBody').innerHTML = `
-    <h3>${c.name}</h3>
-    <p class="modal-grade">${c.grade}</p>
-    <div class="modal-price">${c.price}<small>（税込）</small></div>
-    <div class="modal-specs">
-      <div class="modal-spec"><div class="modal-spec-label">年式</div><div class="modal-spec-value">${c.year}</div></div>
-      <div class="modal-spec"><div class="modal-spec-label">走行距離</div><div class="modal-spec-value">${c.km}</div></div>
-      <div class="modal-spec"><div class="modal-spec-label">ミッション</div><div class="modal-spec-value">${c.trans}</div></div>
-      <div class="modal-spec"><div class="modal-spec-label">駆動</div><div class="modal-spec-value">${c.drive}</div></div>
-      <div class="modal-spec"><div class="modal-spec-label">車体色</div><div class="modal-spec-value">${c.color}</div></div>
-      <div class="modal-spec"><div class="modal-spec-label">車検</div><div class="modal-spec-value">${c.inspection}</div></div>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-btn-main" onclick="scrollToContact();closeModalDirect()">📨 問い合わせる</button>
-      <a href="https://lin.ee/Nxu1UqE" class="modal-btn-line" target="_blank">💬</a>
-    </div>`;
+  var c = cars[i];
+  document.getElementById('modalBody').innerHTML =
+    '<h3>' + c.name + '</h3>' +
+    '<p class="modal-grade">' + c.grade + '</p>' +
+    '<div class="modal-price">' + c.price + '<small>（税込）</small></div>' +
+    '<div class="modal-specs">' +
+    '<div class="modal-spec"><div class="modal-spec-label">年式</div><div class="modal-spec-value">' + c.year + '</div></div>' +
+    '<div class="modal-spec"><div class="modal-spec-label">走行距離</div><div class="modal-spec-value">' + c.km + '</div></div>' +
+    '<div class="modal-spec"><div class="modal-spec-label">ミッション</div><div class="modal-spec-value">' + c.trans + '</div></div>' +
+    '<div class="modal-spec"><div class="modal-spec-label">駆動</div><div class="modal-spec-value">' + c.drive + '</div></div>' +
+    '<div class="modal-spec"><div class="modal-spec-label">車体色</div><div class="modal-spec-value">' + c.color + '</div></div>' +
+    '<div class="modal-spec"><div class="modal-spec-label">車検</div><div class="modal-spec-value">' + c.inspection + '</div></div>' +
+    '</div>' +
+    '<div class="modal-actions">' +
+    '<button class="modal-btn-main" onclick="scrollToContact();closeModalDirect()">📨 問い合わせる</button>' +
+    '<a href="https://lin.ee/Nxu1UqE" class="modal-btn-line" target="_blank">💬</a>' +
+    '</div>';
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -735,7 +713,22 @@ function closeModalDirect() {
   document.body.style.overflow = '';
 }
 
-loadFromSheet();
+// まずデフォルトデータで即表示
+renderCarGrid();
+
+// バックグラウンドでスプレッドシートを読み込み
+fetch(SHEET_CSV_URL)
+  .then(function(res) { return res.text(); })
+  .then(function(text) {
+    var parsed = parseCSV(text);
+    if (parsed.length > 0) {
+      cars = parsed;
+      renderCarGrid();
+    }
+  })
+  .catch(function(e) {
+    console.warn('スプレッドシート読み込み失敗');
+  });
 </script>
 </body>
 </html>
