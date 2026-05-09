@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>車ローン計算機</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .car-icon {
+            font-size: 44px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .input-section {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #1e3c72;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        input[type="number"],
+        input[type="range"] {
+            width: 100%;
+            padding: 14px 12px;
+            font-size: 16px;
+            border: 2px solid #e0e4e8;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="number"] {
+            padding-right: 40px;
+        }
+
+        input[type="number"]:focus {
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        input[type="range"] {
+            height: 6px;
+            padding: 0;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(to right, #e0e4e8, #e0e4e8);
+            border: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(42, 82, 152, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(42, 82, 152, 0.4);
+        }
+
+        .input-unit {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 14px;
+            pointer-events: none;
+            font-weight: 600;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .results-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-result {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 40px 32px;
+            border-radius: 16px;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .main-result-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .main-result-value {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .main-result-unit {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #2a5298;
+        }
+
+        .summary-card.interest {
+            border-left-color: #dc2626;
+        }
+
+        .summary-card-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .summary-card.interest .summary-card-value {
+            color: #dc2626;
+        }
+
+        .schedule-section {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            grid-column: 1 / -1;
+        }
+
+        .schedule-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead tr {
+            background-color: #f9fafb;
+            border-bottom: 2px solid #e0e4e8;
+        }
+
+        th {
+            padding: 14px 8px;
+            text-align: left;
+            font-weight: 700;
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:not(:first-child) {
+            text-align: right;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e0e4e8;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafbfc;
+        }
+
+        tbody tr:hover {
+            background-color: #f0f4f8;
+        }
+
+        td {
+            padding: 12px 8px;
+            color: #1a1a1a;
+        }
+
+        td:not(:first-child) {
+            text-align: right;
+        }
+
+        .interest-col {
+            color: #dc2626;
+        }
+
+        .principal-col {
+            color: #059669;
+        }
+
+        .balance-col {
+            color: #666;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .main-result-value {
+                font-size: 36px;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="car-icon">🚗</span>
+                車ローン計算機
+            </h1>
+            <p>月々の返済額をシミュレーション</p>
+        </div>
+
+        <div class="content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="amount">車の購入価格</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="amount" value="9100000" min="100000" max="20000000" step="100000">
+                        <span class="input-unit">円</span>
+                    </div>
+                    <input type="range" id="amountRange" value="9100000" min="100000" max="20000000" step="100000">
+                    <div class="hint">10万円～2,000万円</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="months">返済期間</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="months" value="120" min="12" max="240" step="1">
+                        <span class="input-unit">ヶ月</span>
+                    </div>
+                    <input type="range" id="monthsRange" value="120" min="12" max="240" step="1">
+                    <div class="hint" id="yearHint">10年0ヶ月</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rate">年利率</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="rate" value="2.5" min="0" max="20" step="0.1">
+                        <span class="input-unit">%</span>
+                    </div>
+                    <input type="range" id="rateRange" value="2.5" min="0" max="20" step="0.1">
+                    <div class="hint">0～20%</div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="main-result">
+                    <div class="main-result-label">月々の返済額</div>
+                    <div class="main-result-value" id="monthlyPayment">82,500</div>
+                    <div class="main-result-unit">円</div>
+                </div>
+
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-card-label">総返済額</div>
+                        <div class="summary-card-value" id="totalPayment">9,900,000</div>
+                    </div>
+                    <div class="summary-card interest">
+                        <div class="summary-card-label">総利息</div>
+                        <div class="summary-card-value" id="totalInterest">800,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Section -->
+        <div class="schedule-section">
+            <h2>📅 返済スケジュール（最初の12ヶ月）</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>月</th>
+                        <th>返済額</th>
+                        <th>利息</th>
+                        <th>元本</th>
+                        <th>残高</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            💡 金利は参考値です。実際のローン条件は金融機関にご確認ください。
+        </div>
+    </div>
+
+    <script>
+        const amountInput = document.getElementById('amount');
+        const amountRange = document.getElementById('amountRange');
+        const monthsInput = document.getElementById('months');
+        const monthsRange = document.getElementById('monthsRange');
+        const rateInput = document.getElementById('rate');
+        const rateRange = document.getElementById('rateRange');
+
+        // Sync inputs
+        amountInput.addEventListener('input', (e) => {
+            amountRange.value = e.target.value;
+            calculate();
+        });
+        amountRange.addEventListener('input', (e) => {
+            amountInput.value = e.target.value;
+            calculate();
+        });
+
+        monthsInput.addEventListener('input', (e) => {
+            monthsRange.value = e.target.value;
+            updateYearHint();
+            calculate();
+        });
+        monthsRange.addEventListener('input', (e) => {
+            monthsInput.value = e.target.value;
+            updateYearHint();
+            calculate();
+        });
+
+        rateInput.addEventListener('input', (e) => {
+            rateRange.value = e.target.value;
+            calculate();
+        });
+        rateRange.addEventListener('input', (e) => {
+            rateInput.value = e.target.value;
+            calculate();
+        });
+
+        function updateYearHint() {
+            const months = parseInt(monthsInput.value);
+            const years = Math.floor(months / 12);
+            const remainingMonths = months % 12;
+            document.getElementById('yearHint').textContent = `${years}年${remainingMonths}ヶ月`;
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('ja-JP', {
+                style: 'currency',
+                currency: 'JPY',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(num).replace('￥', '');
+        }
+
+        function calculate() {
+            const amount = parseFloat(amountInput.value);
+            const months = parseInt(monthsInput.value);
+            const annualRate = parseFloat(rateInput.value);
+
+            const monthlyRate = annualRate / 100 / 12;
+            const principal = amount;
+
+            let monthlyPayment, totalPayment, totalInterest, schedule;
+
+            if (monthlyRate === 0) {
+                monthlyPayment = principal / months;
+                totalPayment = monthlyPayment * months;
+                totalInterest = 0;
+                schedule = [];
+
+                for (let i = 1; i <= Math.min(months, 12); i++) {
+                    schedule.push({
+                        month: i,
+                        payment: monthlyPayment,
+                        interest: 0,
+                        principal: monthlyPayment,
+                        balance: principal - monthlyPayment * i
+                    });
+                }
+            } else {
+                monthlyPayment = (principal * (monthlyRate * Math.pow(1 + monthlyRate, months))) /
+                    (Math.pow(1 + monthlyRate, months) - 1);
+                totalPayment = monthlyPayment * months;
+                totalInterest = totalPayment - principal;
+                schedule = [];
+
+                let balance = principal;
+                for (let i = 1; i <= months; i++) {
+                    const interestPayment = balance * monthlyRate;
+                    const principalPayment = monthlyPayment - interestPayment;
+                    balance -= principalPayment;
+
+                    if (i <= 12 || i === months) {
+                        schedule.push({
+                            month: i,
+                            payment: monthlyPayment,
+                            interest: interestPayment,
+                            principal: principalPayment,
+                            balance: Math.max(0, balance)
+                        });
+                    }
+                }
+            }
+
+            // Update display
+            document.getElementById('monthlyPayment').textContent = formatCurrency(monthlyPayment);
+            document.getElementById('totalPayment').textContent = formatCurrency(totalPayment);
+            document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
+
+            // Update schedule table
+            const scheduleBody = document.getElementById('scheduleBody');
+            scheduleBody.innerHTML = '';
+            
+            schedule.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.month}</td>
+                    <td><strong>${formatCurrency(row.payment)}</strong></td>
+                    <td class="interest-col">${formatCurrency(row.interest)}</td>
+                    <td class="principal-col">${formatCurrency(row.principal)}</td>
+                    <td class="balance-col">${formatCurrency(row.balance)}</td>
+                `;
+                scheduleBody.appendChild(tr);
+            });
+        }
+
+        // Initial calculation
+        updateYearHint();
+        calculate();
+    </script>
+</body>
+</html>
