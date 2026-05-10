@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>在庫車両一覧 | 株式会社北斗自動車</title>
+<title>金沢市の中古車販売・買取なら北斗自動車 | 車検・整備も対応</title>
+<meta name="description" content="石川県金沢市の北斗自動車は、中古車販売・買取・車検・整備に対応する地域密着の中古車店です。現車確認・試乗・下取り相談も歓迎。LINEで来店予約・査定相談ができます。">
+<meta name="keywords" content="金沢市 中古車 販売 買取 車検 整備 北斗自動車 石川県 軽自動車">
+<meta property="og:title" content="金沢市の中古車販売・買取なら北斗自動車 | 車検・整備も対応">
+<meta property="og:description" content="石川県金沢市の北斗自動車。中古車販売・買取・車検・整備に対応。現車確認・試乗・下取り相談も歓迎。LINEで来店予約できます。">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Noto+Sans+JP:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -251,18 +256,25 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
     <div class="logo-icon">🚗</div>
     <div class="logo-text">株式会社北斗自動車<small>HOKUTO JIDOUSHA</small></div>
   </div>
-  <nav>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <a href="tel:0762077369" style="display:flex; align-items:center; gap:6px; color:var(--orange); font-weight:700; font-size:13px; text-decoration:none;">
+      📞 076-207-7369
+    </a>
+    <nav>
     <a href="#inventory">在庫車両</a>
     <a href="#kaitori">買取</a>
     <a href="#service">サービス</a>
+    <a href="#faq">FAQ</a>
     <a href="#access">アクセス</a>
     <a href="#contact" class="nav-cta">お問い合わせ</a>
   </nav>
+  </div>
 </header>
 
 <section class="hero">
   <div class="hero-badge">🎉 在庫続々入荷中！</div>
-  <h1>いいクルマ、<br>きっと見つかる。<br><span class="accent">北斗自動車</span></h1>
+  <h1 style="font-size:0;position:absolute;opacity:0;">金沢市の中古車販売・買取なら北斗自動車</h1>
+  <p aria-hidden="true" style="font-family:'Paytone One',sans-serif; font-size:clamp(36px,7vw,68px); color:white; line-height:1.1; text-shadow:0 3px 12px rgba(0,0,0,0.15);">いいクルマ、<br>きっと見つかる。<br><span style="background:var(--yellow);color:var(--dark);padding:0 12px;border-radius:8px;display:inline-block;">北斗自動車</span></p>
   <p class="hero-sub">石川県金沢市の中古車専門店 — 丁寧な接客と安心の品質</p>
   <div class="hero-stats">
     <div class="stat"><div class="stat-num" id="carCount">-<span>台</span></div><div class="stat-label">現在の在庫台数</div></div>
@@ -270,6 +282,20 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
     <div class="stat"><div class="stat-num">LINE</div><div class="stat-label">LINEで気軽に相談</div></div>
   </div>
 </section>
+
+<!-- 店舗情報ストリップ -->
+<div style="background:var(--dark); padding:12px 32px; display:flex; gap:24px; align-items:center; flex-wrap:wrap; justify-content:center;">
+  <a href="tel:0762077369" style="display:flex; align-items:center; gap:6px; color:white; text-decoration:none; font-size:13px; font-weight:700;">
+    📞 <span style="color:var(--yellow);">076-207-7369</span>
+  </a>
+  <span style="color:rgba(255,255,255,0.3);">|</span>
+  <span style="font-size:12px; color:rgba(255,255,255,0.75);">🕐 平日 9:30〜17:00 ／ 土日祝 13:00〜16:00</span>
+  <span style="color:rgba(255,255,255,0.3);">|</span>
+  <span style="font-size:12px; color:rgba(255,255,255,0.75);">📅 定休日：大型連休のみ</span>
+  <span style="color:rgba(255,255,255,0.3);">|</span>
+  <span style="font-size:12px; color:rgba(255,255,255,0.75);">📍 金沢市八日市出町951</span>
+  <a href="https://lin.ee/Nxu1UqE" target="_blank" style="background:#06C755; color:white; font-size:12px; font-weight:700; padding:6px 16px; border-radius:20px; text-decoration:none;">💬 LINEで来店予約</a>
+</div>
 
 <div class="filter-bar" id="inventory">
   <span class="filter-label">絞り込み：</span>
@@ -281,8 +307,70 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
 </div>
 
 <section class="inventory-section">
-  <h2 class="section-title">🚗 在庫車両一覧</h2>
+  <h2 class="section-title">🚗 在庫車両一覧 — 金沢市の中古車</h2>
   <div class="car-grid" id="carGrid"></div>
+</section>
+
+
+<!-- 選ばれる理由 -->
+<section style="background:var(--off-white); padding:70px 32px;">
+  <div style="max-width:960px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:48px;">
+      <h2 style="font-family:'Paytone One',sans-serif; font-size:30px; color:var(--dark);">北斗自動車が<span style="color:var(--orange);">選ばれる理由</span></h2>
+      <p style="color:var(--gray); font-size:14px; margin-top:10px; line-height:1.8;">金沢市で中古車をお探しなら、販売から買取・整備までまとめてご相談ください。</p>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+      <div style="background:white; border-radius:20px; padding:28px 24px; box-shadow:var(--shadow); border-top:4px solid var(--orange);">
+        <div style="font-size:36px; margin-bottom:14px;">🤝</div>
+        <h3 style="font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:10px;">地域密着で相談しやすい</h3>
+        <p style="font-size:13px; color:var(--gray); line-height:1.8;">金沢市八日市出町で地域に根ざした営業を行っています。気軽にLINEや電話でご相談ください。</p>
+      </div>
+      <div style="background:white; border-radius:20px; padding:28px 24px; box-shadow:var(--shadow); border-top:4px solid var(--yellow);">
+        <div style="font-size:36px; margin-bottom:14px;">🚗</div>
+        <h3 style="font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:10px;">試乗・現車確認歓迎</h3>
+        <p style="font-size:13px; color:var(--gray); line-height:1.8;">気になるお車はぜひ実際に見て・乗って確認してください。ご予約の上でお越しください。</p>
+      </div>
+      <div style="background:white; border-radius:20px; padding:28px 24px; box-shadow:var(--shadow); border-top:4px solid var(--green);">
+        <div style="font-size:36px; margin-bottom:14px;">🔧</div>
+        <h3 style="font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:10px;">販売から整備まで一貫対応</h3>
+        <p style="font-size:13px; color:var(--gray); line-height:1.8;">車の販売だけでなく、買取・車検・修理・整備まで幅広く対応。購入後も安心してお任せください。</p>
+      </div>
+      <div style="background:white; border-radius:20px; padding:28px 24px; box-shadow:var(--shadow); border-top:4px solid #833AB4;">
+        <div style="font-size:36px; margin-bottom:14px;">💰</div>
+        <h3 style="font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:10px;">透明な価格・丁寧な説明</h3>
+        <p style="font-size:13px; color:var(--gray); line-height:1.8;">諸費用や車両状態を正直にお伝えします。納得いくまでご説明しますのでお気軽にどうぞ。</p>
+      </div>
+      <div style="background:white; border-radius:20px; padding:28px 24px; box-shadow:var(--shadow); border-top:4px solid #06C755;">
+        <div style="font-size:36px; margin-bottom:14px;">💬</div>
+        <h3 style="font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:10px;">LINEで気軽に相談</h3>
+        <p style="font-size:13px; color:var(--gray); line-height:1.8;">来店前の質問、在庫確認、買取査定の依頼などLINEでいつでもお気軽にどうぞ。</p>
+      </div>
+      <div style="background:white; border-radius:20px; padding:28px 24px; box-shadow:var(--shadow); border-top:4px solid var(--orange-light);">
+        <div style="font-size:36px; margin-bottom:14px;">🔄</div>
+        <h3 style="font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:10px;">下取り・買取も相談OK</h3>
+        <p style="font-size:13px; color:var(--gray); line-height:1.8;">今お乗りのお車の下取り・買取もお任せください。オークション代行で高値売却のご提案も可能です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ローン計算バナー -->
+<section style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); padding:48px 32px; text-align:center; position:relative; overflow:hidden;">
+  <div style="position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:rgba(255,107,43,0.1); border-radius:50%;"></div>
+  <div style="position:absolute; bottom:-60px; left:-30px; width:250px; height:250px; background:rgba(255,210,63,0.08); border-radius:50%;"></div>
+  <div style="position:relative; z-index:1; max-width:640px; margin:0 auto;">
+    <div style="display:inline-block; background:rgba(255,107,43,0.2); color:#FF8F5E; font-size:11px; font-weight:700; letter-spacing:0.25em; padding:6px 18px; border-radius:20px; margin-bottom:18px;">💳 LOAN CALCULATOR</div>
+    <h2 style="font-family:'Paytone One',sans-serif; font-size:clamp(24px,5vw,36px); color:white; line-height:1.2; margin-bottom:12px;">月々いくら？<br>ローンをシミュレーション</h2>
+    <p style="font-size:14px; color:rgba(255,255,255,0.65); line-height:1.8; margin-bottom:32px;">
+      購入前にローンの目安を確認しておきましょう。<br>金額・期間・金利を入力するだけで簡単に計算できます。
+    </p>
+    <a href="https://hokutojidousha.github.io/hokutojidousha/car_loan_calculator.html" target="_blank"
+      style="display:inline-flex; align-items:center; gap:12px; background:linear-gradient(135deg,var(--orange),var(--yellow)); color:var(--dark); font-family:'Noto Sans JP',sans-serif; font-size:16px; font-weight:700; padding:18px 40px; border-radius:50px; text-decoration:none; box-shadow:0 8px 32px rgba(255,107,43,0.4); transition:transform 0.2s;"
+      onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+      🧮 ローン計算してみる
+    </a>
+    <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:16px;">※ 計算結果はあくまで目安です。詳細はLINEでご相談ください。</p>
+  </div>
 </section>
 
 <section class="kaitori-section" id="kaitori">
@@ -474,6 +562,65 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
   </div>
 </section>
 
+<!-- よくある質問 -->
+<section style="background:var(--off-white); padding:70px 32px;" id="faq">
+  <div style="max-width:720px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:48px;">
+      <h2 style="font-family:'Paytone One',sans-serif; font-size:30px; color:var(--dark);">❓ よくある<span style="color:var(--orange);">ご質問</span></h2>
+      <p style="color:var(--gray); font-size:14px; margin-top:10px;">来店前の不安やご疑問にお答えします。</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+
+      <details style="background:white; border-radius:16px; padding:20px 24px; box-shadow:var(--shadow); cursor:pointer;">
+        <summary style="font-weight:700; font-size:15px; color:var(--dark); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+          <span>Q. 現車確認だけでも大丈夫ですか？</span>
+          <span style="color:var(--orange); font-size:20px; flex-shrink:0; margin-left:12px;">＋</span>
+        </summary>
+        <p style="margin-top:14px; font-size:13px; color:var(--gray); line-height:1.9; border-top:1px solid var(--gray-light); padding-top:14px;">A. もちろんです！購入の意思がなくても、見るだけでも歓迎です。ご来店前にLINEや電話でご連絡いただけるとスムーズです。</p>
+      </details>
+      <details style="background:white; border-radius:16px; padding:20px 24px; box-shadow:var(--shadow); cursor:pointer;">
+        <summary style="font-weight:700; font-size:15px; color:var(--dark); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+          <span>Q. 試乗はできますか？</span>
+          <span style="color:var(--orange); font-size:20px; flex-shrink:0; margin-left:12px;">＋</span>
+        </summary>
+        <p style="margin-top:14px; font-size:13px; color:var(--gray); line-height:1.9; border-top:1px solid var(--gray-light); padding-top:14px;">A. はい、試乗可能です。ご希望の場合はお電話またはLINEにてご予約ください。</p>
+      </details>
+      <details style="background:white; border-radius:16px; padding:20px 24px; box-shadow:var(--shadow); cursor:pointer;">
+        <summary style="font-weight:700; font-size:15px; color:var(--dark); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+          <span>Q. 下取りだけの相談も可能ですか？</span>
+          <span style="color:var(--orange); font-size:20px; flex-shrink:0; margin-left:12px;">＋</span>
+        </summary>
+        <p style="margin-top:14px; font-size:13px; color:var(--gray); line-height:1.9; border-top:1px solid var(--gray-light); padding-top:14px;">A. もちろんです！他社で車を購入される場合でも、下取りや買取のご相談だけでもお気軽にどうぞ。</p>
+      </details>
+      <details style="background:white; border-radius:16px; padding:20px 24px; box-shadow:var(--shadow); cursor:pointer;">
+        <summary style="font-weight:700; font-size:15px; color:var(--dark); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+          <span>Q. LINEで在庫確認・相談できますか？</span>
+          <span style="color:var(--orange); font-size:20px; flex-shrink:0; margin-left:12px;">＋</span>
+        </summary>
+        <p style="margin-top:14px; font-size:13px; color:var(--gray); line-height:1.9; border-top:1px solid var(--gray-light); padding-top:14px;">A. はい、LINEからお気軽にご相談いただけます。在庫確認・価格交渉・査定依頼など何でもお問い合わせください。</p>
+      </details>
+      <details style="background:white; border-radius:16px; padding:20px 24px; box-shadow:var(--shadow); cursor:pointer;">
+        <summary style="font-weight:700; font-size:15px; color:var(--dark); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+          <span>Q. ローンは組めますか？</span>
+          <span style="color:var(--orange); font-size:20px; flex-shrink:0; margin-left:12px;">＋</span>
+        </summary>
+        <p style="margin-top:14px; font-size:13px; color:var(--gray); line-height:1.9; border-top:1px solid var(--gray-light); padding-top:14px;">A. はい、ローンのご相談も承っております。まずはLINEや電話でお気軽にご相談ください。</p>
+      </details>
+      <details style="background:white; border-radius:16px; padding:20px 24px; box-shadow:var(--shadow); cursor:pointer;">
+        <summary style="font-weight:700; font-size:15px; color:var(--dark); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+          <span>Q. 修復歴ありの車も扱っていますか？</span>
+          <span style="color:var(--orange); font-size:20px; flex-shrink:0; margin-left:12px;">＋</span>
+        </summary>
+        <p style="margin-top:14px; font-size:13px; color:var(--gray); line-height:1.9; border-top:1px solid var(--gray-light); padding-top:14px;">A. 在庫車両の修復歴は正直にお伝えしています。詳細は各車両の情報またはLINE・電話でご確認ください。</p>
+      </details>
+    </div>
+    <div style="text-align:center; margin-top:36px;">
+      <p style="color:var(--gray); font-size:13px; margin-bottom:14px;">他にご不明な点がございましたらお気軽にどうぞ！</p>
+      <a href="https://lin.ee/Nxu1UqE" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#06C755; color:white; font-family:'Noto Sans JP',sans-serif; font-size:15px; font-weight:700; padding:14px 32px; border-radius:14px; text-decoration:none;">💬 LINEで質問する</a>
+    </div>
+  </div>
+</section>
+
 <section class="access-section" id="access">
   <div style="text-align:center;margin-bottom:40px;">
     <h2 style="font-family:'Paytone One',sans-serif;font-size:28px;">📍 店舗・アクセス</h2>
@@ -483,7 +630,9 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
     <div class="access-info">
       <h3>株式会社北斗自動車</h3>
       <div class="info-row"><div class="info-icon">📍</div><div class="info-text"><strong>住所</strong>石川県金沢市八日市出町951</div></div>
-      <div class="info-row"><div class="info-icon">🕐</div><div class="info-text"><strong>営業時間</strong>詳細はLINE・電話でご確認ください</div></div>
+      <div class="info-row"><div class="info-icon">📞</div><div class="info-text"><strong>電話番号</strong><a href="tel:0762077369" style="color:var(--orange); font-weight:700; text-decoration:none; font-size:16px;">076-207-7369</a></div></div>
+      <div class="info-row"><div class="info-icon">🕐</div><div class="info-text"><strong>営業時間</strong>平日 9:30〜17:00<br>土日祝 13:00〜16:00</div></div>
+      <div class="info-row"><div class="info-icon">📅</div><div class="info-text"><strong>定休日</strong>大型連休のみ（年中ほぼ営業中）</div></div>
       <div class="info-row"><div class="info-icon">🚗</div><div class="info-text"><strong>試乗・下取り</strong>試乗可・下取り買取相談歓迎</div></div>
       <div class="info-row"><div class="info-icon">💬</div><div class="info-text"><strong>お問い合わせ</strong>LINEが一番スムーズです！</div></div>
     </div>
@@ -499,7 +648,8 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
       <h2>📨 お問い合わせ</h2>
       <p>気になるお車のご相談、試乗予約、下取り査定など<br>なんでもお気軽にどうぞ！</p>
     </div>
-    <a href="https://lin.ee/Nxu1UqE" target="_blank" class="contact-btn contact-btn-line">💬 LINEでお問い合わせ・査定依頼</a>
+    <a href="tel:0762077369" class="contact-btn" style="background:var(--orange); color:white; font-size:16px; font-weight:700;">📞 電話で来店予約・相談</a>
+    <a href="https://lin.ee/Nxu1UqE" target="_blank" class="contact-btn contact-btn-line">💬 LINEで来店予約・査定依頼</a>
     <a href="https://www.instagram.com/HOKUTOJIDOUSHA_/" target="_blank" class="contact-btn contact-btn-ig">📸 Instagramを見る・DMで相談</a>
     <div class="contact-info">
       📍 石川県金沢市八日市出町951<br>
