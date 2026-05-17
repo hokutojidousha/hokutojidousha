@@ -506,7 +506,7 @@ function renderJisseki(data) {
         if (m) imgUrl = 'https://lh3.googleusercontent.com/d/' + m[1];
       }
       imgHtml = '<div style="height:160px; overflow:hidden; border-radius:10px; margin-bottom:14px; background:var(--gray-light);">' +
-        '<img src="' + imgUrl + '" alt="' + (d.car_name||'') + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'">' +
+        '<img src="' + imgUrl + '" alt="' + (d.car_name||'') + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">' +
         '</div>';
     }
     return '<div class="jisseki-card">' +
@@ -526,10 +526,12 @@ window.onload = function() {
   renderKyoka(KYOKA_BACKUP);
   renderJisseki(JISSEKI_BACKUP);
 
-  // 在庫ページと同じ方法でスプレッドシートを読み込む
+  // スプレッドシートを読み込む
   fetch(SHEET_URL)
     .then(function(r) { return r.text(); })
     .then(function(t) {
+      // デバッグ：最初の200文字を表示
+      document.title = 'OK:' + t.substring(0, 50);
       var lines = t.trim().split('\n');
       var kyokaData = [];
       var jissekiData = [];
