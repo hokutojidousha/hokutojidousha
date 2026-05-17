@@ -440,7 +440,7 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
 
 <script>
 // ===== スプレッドシートURL =====
-var SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQluR3VbZdPLVkMiNpt27l2e7UnGehnmwSaG19Wbxb6rKO3yTruurkdA7p6UzhNINAlhQACIRx8em-v/pub?gid=0&single=true&output=csv';
+var SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRtVtiCpLY8mNa8kOuCd-Jv_zMP7iWN1eCF9ysz72PamQRVE35bMsyBkDf8_VV-vkm1M0QQ-YxlbYiv/pub?gid=2135556780&single=true&output=csv';
 
 var KYOKA_BACKUP = [
   { maker:'ダイハツ', model:'タント', comment:'現在高価買取中！' },
@@ -547,13 +547,13 @@ window.onload = function() {
         }
         cols.push(cur.trim().replace(/"/g,''));
 
-        // T〜V列（19〜21）：買取強化車種
-        if (cols[19] && cols[19].trim() !== '') {
-          kyokaData.push({ maker: cols[19]||'', model: cols[20]||'', comment: cols[21]||'' });
+        // A〜C列（0〜2）：買取強化車種
+        if (cols[0] && cols[0].trim() !== '') {
+          kyokaData.push({ maker: cols[0]||'', model: cols[1]||'', comment: cols[2]||'' });
         }
-        // W〜AA列（22〜26）：買取実績
-        if (cols[22] && cols[22].trim() !== '') {
-          jissekiData.push({ car_name: cols[22]||'', year: cols[23]||'', km: cols[24]||'', comment: cols[25]||'', url: cols[26]||'' });
+        // D〜H列（3〜7）：買取実績
+        if (cols[3] && cols[3].trim() !== '') {
+          jissekiData.push({ car_name: cols[3]||'', year: cols[4]||'', km: cols[5]||'', comment: cols[6]||'', url: cols[7]||'' });
         }
       }
 
