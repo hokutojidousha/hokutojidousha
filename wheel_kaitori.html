@@ -391,38 +391,92 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
 </footer>
 
 <script>
-// ホイール買取実績（スプレッドシート連携は後で追加可能）
+// スプレッドシートURL
+var WHEEL_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSEHBnT9uQJsfxSk6C9ZSfi8Sp9hidjDRSvetSg5pEZYLDTItXzWFsbH6TDk3ikz86lW3_wdZ5GSux2/pub?gid=0&single=true&output=csv';
+
+// バックアップデータ（スプレッドシートに入力後は自動更新）
 var WHEEL_JISSEKI_BACKUP = [];
+
+function parseCSV(csv) {
+  var lines = csv.trim().split('\n');
+  if (lines.length < 2) return [];
+  var headers = lines[0].split(',').map(function(h) { return h.trim().replace(/\r/g,'').replace(/"/g,''); });
+  var result = [];
+  for (var i = 1; i < lines.length; i++) {
+    var line = lines[i].replace(/\r/g,'');
+    if (!line.trim()) continue;
+    var cols = [];
+    var cur = '', inQ = false;
+    for (var j = 0; j < line.length; j++) {
+      var ch = line[j];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim().replace(/"/g,'')); cur = ''; }
+      else { cur += ch; }
+    }
+    cols.push(cur.trim().replace(/"/g,''));
+    var obj = {};
+    for (var k = 0; k < headers.length; k++) {
+      obj[headers[k]] = cols[k] || '';
+    }
+    if (Object.values(obj).some(function(v) { return v !== ''; })) result.push(obj);
+  }
+  return result;
+}
 
 function renderWheelJisseki(data) {
   var grid = document.getElementById('wheelJissekiGrid');
   if (!grid || !data.length) return;
   grid.innerHTML = data.map(function(d) {
-    var imgHtml = '';
-    if (d.url && d.url.trim() !== '') {
-      var imgUrl = d.url.trim();
-      if (imgUrl.indexOf('drive.google.com') !== -1) {
-        var m = imgUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    var rawImg = (d['画像1'] || '').trim();
+    if (rawImg === 'URL' || rawImg === '') rawImg = '';
+    var imgUrl = '';
+    if (rawImg !== '') {
+      if (rawImg.indexOf('github.io') !== -1) {
+        imgUrl = rawImg;
+      } else if (rawImg.indexOf('drive.google.com') !== -1) {
+        var m = rawImg.match(/[/]d[/]([a-zA-Z0-9_-]+)/);
         if (m) imgUrl = 'https://lh3.googleusercontent.com/d/' + m[1];
+      } else {
+        imgUrl = rawImg;
       }
-      imgHtml = '<div style="height:160px;overflow:hidden;border-radius:10px;margin-bottom:14px;background:var(--gray-light);">' +
-        '<img src="' + imgUrl + '" alt="ホイール買取実績" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">' +
-        '</div>';
     }
+    var imgHtml = imgUrl
+      ? '<div style="height:180px;overflow:hidden;border-radius:10px;margin-bottom:14px;background:var(--gray-light);">' +
+        '<img src="' + imgUrl + '" alt="ホイール買取実績" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'">' +
+        '</div>'
+      : '';
+    var maker = d['メーカー'] || '';
+    var size  = d['サイズ'] || '';
+    var pcd   = d['PCD'] || '';
+    var state = d['状態'] || '';
+    var price = d['買取価格'] || '';
+    var memo  = d['コメント'] || '';
+    if (!maker && !size) return '';
     return '<div class="jisseki-card">' +
       imgHtml +
-      '<div class="jisseki-car">' + (d.item_name || d.car_name || '') + '</div>' +
+      '<div class="jisseki-car">' + maker + (size ? ' ' + size : '') + '</div>' +
       '<div class="jisseki-meta">' +
-      (d.size ? '<span class="jisseki-tag">' + d.size + '</span>' : '') +
-      (d.count ? '<span class="jisseki-tag">' + d.count + '</span>' : '') +
+      (pcd ? '<span class="jisseki-tag">PCD ' + pcd + '</span>' : '') +
+      (state ? '<span class="jisseki-tag">' + state + '</span>' : '') +
+      (price ? '<span class="jisseki-tag" style="background:var(--orange-pale);color:var(--orange);">¥' + price + '</span>' : '') +
       '</div>' +
-      (d.comment ? '<div class="jisseki-comment">' + d.comment + '</div>' : '') +
+      (memo ? '<div class="jisseki-comment">' + memo + '</div>' : '') +
       '</div>';
-  }).join('');
+  }).filter(function(h) { return h !== ''; }).join('');
 }
 
 window.onload = function() {
+  // バックアップで即表示
   if (WHEEL_JISSEKI_BACKUP.length > 0) renderWheelJisseki(WHEEL_JISSEKI_BACKUP);
+
+  // スプレッドシートから読み込み
+  fetch(WHEEL_SHEET_URL)
+    .then(function(r) { return r.text(); })
+    .then(function(t) {
+      var d = parseCSV(t);
+      if (d.length > 0) renderWheelJisseki(d);
+    })
+    .catch(function() {});
 };
 </script>
 </body>
