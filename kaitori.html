@@ -547,13 +547,13 @@ window.onload = function() {
         }
         cols.push(cur.trim().replace(/"/g,''));
 
-        // A〜C列：買取強化車種
-        if (cols[0] && cols[0].trim() !== '') {
-          kyokaData.push({ maker: cols[0]||'', model: cols[1]||'', comment: cols[2]||'' });
+        // T〜V列（18〜20）：買取強化車種
+        if (cols[18] && cols[18].trim() !== '') {
+          kyokaData.push({ maker: cols[18]||'', model: cols[19]||'', comment: cols[20]||'' });
         }
-        // D〜H列：買取実績
-        if (cols[3] && cols[3].trim() !== '') {
-          jissekiData.push({ car_name: cols[3]||'', year: cols[4]||'', km: cols[5]||'', comment: cols[6]||'', url: cols[7]||'' });
+        // W〜AA列（21〜25）：買取実績
+        if (cols[21] && cols[21].trim() !== '') {
+          jissekiData.push({ car_name: cols[21]||'', year: cols[22]||'', km: cols[23]||'', comment: cols[24]||'', url: cols[25]||'' });
         }
       }
 
