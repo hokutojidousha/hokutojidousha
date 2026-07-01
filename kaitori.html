@@ -130,7 +130,7 @@ header { position:sticky; top:0; z-index:100; background:var(--white); box-shado
 /* JISSEKI (実績) */
 .jisseki-section { background:var(--off-white); padding:70px 32px; }
 .jisseki-inner { max-width:960px; margin:0 auto; }
-.jisseki-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+.jisseki-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 .jisseki-card { background:var(--white); border-radius:16px; padding:24px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
 .jisseki-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--orange),var(--yellow)); }
 .jisseki-car { font-weight:700; font-size:16px; color:var(--dark); margin-bottom:6px; }
@@ -181,6 +181,7 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
   .access-inner { grid-template-columns:1fr; gap:24px; }
   .map-wrap { height:220px; }
   .features,.flow-section,.auction-section,.kyoka-section,.jisseki-section,.access-section,.contact-section { padding:44px 16px; }
+  .jisseki-grid { grid-template-columns:1fr; }
   .info-strip { padding:10px 16px; gap:10px; }
 }
 @media (max-width:480px) {
@@ -440,7 +441,7 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
 
 <script>
 // ===== スプレッドシートURL =====
-var SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRtVtiCpLY8mNa8kOuCd-Jv_zMP7iWN1eCF9ysz72PamQRVE35bMsyBkDf8_VV-vkm1M0QQ-YxlbYiv/pub?gid=2135556780&single=true&output=csv';
+var SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRtVtiCpLY8mNa8kOuCd-Jv_zMP7iWN1eCF9ysz72PamQRVE35bMsyBkDf8_VV-vkm1M0QQ-YxlbYiv/pub?gid=1785921849&single=true&output=csv';
 
 var KYOKA_BACKUP = [
   { maker:'ダイハツ', model:'タント', comment:'現在高価買取中！' },
@@ -496,12 +497,15 @@ function renderKyoka(data) {
 function renderJisseki(data) {
   var grid = document.getElementById('jissekiGrid');
   if (!grid || !data.length) return;
-  grid.innerHTML = data.map(function(d) {
+  var items = data.slice(0, 9);
+  grid.innerHTML = items.map(function(d) {
     var imgHtml = '';
     if (d.url && d.url.trim() !== '') {
       var imgUrl = d.url.trim();
-      // GitHubのURLはそのまま、GoogleドライブはサムネイルURLに変換
-      if (imgUrl.indexOf('drive.google.com') !== -1) {
+      // ファイル名だけの場合は/buy/car/フォルダを参照
+      if (imgUrl.indexOf('http') !== 0) {
+        imgUrl = 'https://hokutojidousha.github.io/hokutojidousha/buy/car/' + imgUrl;
+      } else if (imgUrl.indexOf('drive.google.com') !== -1) {
         var m = imgUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (m) imgUrl = 'https://lh3.googleusercontent.com/d/' + m[1];
       }
@@ -515,6 +519,7 @@ function renderJisseki(data) {
       '<div class="jisseki-meta">' +
       (d.year ? '<span class="jisseki-tag">' + d.year + '</span>' : '') +
       (d.km ? '<span class="jisseki-tag">' + d.km + '</span>' : '') +
+      (d.price ? '<span class="jisseki-tag" style="background:var(--orange-pale);color:var(--orange);font-weight:700;">¥' + d.price + '</span>' : '') +
       '</div>' +
       (d.comment ? '<div class="jisseki-comment">' + d.comment + '</div>' : '') +
       '</div>';
@@ -530,8 +535,6 @@ window.onload = function() {
   fetch(SHEET_URL)
     .then(function(r) { return r.text(); })
     .then(function(t) {
-      // デバッグ：最初の200文字を表示
-      document.title = 'OK:' + t.substring(0, 50);
       var lines = t.trim().split('\n');
       var kyokaData = [];
       var jissekiData = [];
@@ -555,7 +558,7 @@ window.onload = function() {
         }
         // D〜H列（3〜7）：買取実績
         if (cols[3] && cols[3].trim() !== '') {
-          jissekiData.push({ car_name: cols[3]||'', year: cols[4]||'', km: cols[5]||'', comment: cols[6]||'', url: cols[7]||'' });
+          jissekiData.push({ car_name: cols[3]||'', year: cols[4]||'', km: cols[5]||'', comment: cols[6]||'', url: cols[7]||'', price: cols[8]||'' });
         }
       }
 
