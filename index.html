@@ -35,10 +35,10 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { font-family:'Noto Sans JP',sans-serif; background:var(--off-white); color:var(--dark); overflow-x:hidden; }
+body { font-family:'Noto Sans JP',sans-serif; background:var(--off-white); color:var(--dark); overflow-x:hidden; padding-top:64px; }
 
 /* HEADER */
-header { position:sticky; top:0; z-index:100; background:var(--white); box-shadow:0 2px 16px rgba(43,31,20,0.08); padding:0 32px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+header { position:fixed; top:0; left:0; right:0; z-index:100; background:var(--white); box-shadow:0 2px 16px rgba(43,31,20,0.08); padding:0 32px; height:64px; display:flex; align-items:center; justify-content:space-between; }
 .logo-wrap { display:flex; align-items:center; gap:10px; }
 .logo-icon { width:38px; height:38px; background:var(--orange); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; }
 .logo-text { font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); letter-spacing:0.02em; line-height:1.1; }
@@ -64,9 +64,12 @@ nav .nav-cta:hover { background:var(--orange-light); color:white; }
 .stat-label { font-size:11px; opacity:0.85; margin-top:4px; letter-spacing:0.1em; }
 
 /* FILTER */
-.filter-bar { background:var(--white); padding:16px 32px; display:flex; gap:10px; align-items:center; border-bottom:2px solid var(--gray-light); position:sticky; top:64px; z-index:90; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.filter-label { font-size:12px; font-weight:700; color:var(--gray); letter-spacing:0.1em; margin-right:4px; white-space:nowrap; }
-.filter-btn { border:2px solid var(--gray-light); background:white; color:var(--gray); font-family:'Noto Sans JP',sans-serif; font-size:13px; font-weight:500; padding:8px 18px; border-radius:20px; cursor:pointer; transition:all 0.2s; white-space:nowrap; flex-shrink:0; }
+.filter-bar { background:var(--white); padding:0 32px; display:flex; gap:0; align-items:center; border-bottom:2px solid var(--gray-light); position:sticky; top:64px; z-index:90; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.filter-label { display:none; }
+.nav-tab { border:none; border-bottom:3px solid transparent; background:none; color:var(--gray); font-family:'Noto Sans JP',sans-serif; font-size:14px; font-weight:700; padding:14px 20px; cursor:pointer; transition:all 0.2s; white-space:nowrap; flex-shrink:0; text-decoration:none; display:flex; align-items:center; gap:5px; }
+.nav-tab:hover { color:var(--orange); border-bottom-color:var(--orange); }
+.type-filter { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.filter-btn { border:2px solid var(--gray-light); background:white; color:var(--gray); font-family:'Noto Sans JP',sans-serif; font-size:13px; font-weight:500; padding:7px 16px; border-radius:20px; cursor:pointer; transition:all 0.2s; white-space:nowrap; flex-shrink:0; }
 .filter-btn:hover,.filter-btn.active { border-color:var(--orange); background:var(--orange-pale); color:var(--orange); }
 
 /* INVENTORY */
@@ -231,13 +234,16 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
 /* RESPONSIVE */
 @media (max-width:768px) {
   header { padding:0 16px; height:56px; }
+  body { padding-top:56px; }
   nav a:not(.nav-cta) { display:none; }
   .hero { padding:56px 16px 48px; }
   .hero h1 { font-size:34px; }
   .hero-stats { gap:8px; }
   .stat { padding:10px 14px; }
   .stat-num { font-size:22px; }
-  .filter-bar { padding:10px 12px; }
+  .filter-bar { padding:0 8px; }
+  .nav-tab { font-size:12px; padding:12px 12px; gap:3px; }
+  .type-filter { padding:0 16px; margin-bottom:16px; }
   .filter-label { display:none; }
   .inventory-section { padding:24px 12px; }
   .car-grid { grid-template-columns:1fr; gap:14px; }
@@ -407,17 +413,23 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
   <a href="https://lin.ee/Nxu1UqE" target="_blank" style="background:#06C755; color:white; font-size:12px; font-weight:700; padding:6px 16px; border-radius:20px; text-decoration:none;">💬 LINEで来店予約</a>
 </div>
 
-<div class="filter-bar" id="inventory">
-  <span class="filter-label">絞り込み：</span>
-  <button class="filter-btn active" onclick="setFilter('all',this)">すべて</button>
-  <button class="filter-btn" onclick="setFilter('kei',this)">軽自動車</button>
-  <button class="filter-btn" onclick="setFilter('compact',this)">コンパクト</button>
-  <button class="filter-btn" onclick="setFilter('minivan',this)">ミニバン</button>
-  <button class="filter-btn" onclick="setFilter('suv',this)">SUV・4WD</button>
+<div class="filter-bar">
+  <button class="nav-tab" onclick="document.getElementById('inventory').scrollIntoView({behavior:'smooth'})">🚗 在庫</button>
+  <a class="nav-tab" href="kaitori.html">🙌 車の買取</a>
+  <a class="nav-tab" href="wheel_kaitori.html">🔩 ホイール買取</a>
+  <button class="nav-tab" onclick="document.getElementById('instagram').scrollIntoView({behavior:'smooth'})">📸 インスタ</button>
+  <button class="nav-tab" onclick="document.getElementById('access').scrollIntoView({behavior:'smooth'})">📍 アクセス</button>
 </div>
 
-<section class="inventory-section">
+<section class="inventory-section" id="inventory">
   <h2 class="section-title">🚗 在庫車両一覧 — 金沢市の中古車</h2>
+  <div class="type-filter">
+    <button class="filter-btn active" onclick="setFilter('all',this)">すべて</button>
+    <button class="filter-btn" onclick="setFilter('kei',this)">軽自動車</button>
+    <button class="filter-btn" onclick="setFilter('compact',this)">コンパクト</button>
+    <button class="filter-btn" onclick="setFilter('minivan',this)">ミニバン</button>
+    <button class="filter-btn" onclick="setFilter('suv',this)">SUV・4WD</button>
+  </div>
   <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460); border-radius:var(--radius); padding:28px 32px; margin-bottom:28px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px;">
     <div>
       <p style="color:var(--yellow); font-size:11px; font-weight:700; letter-spacing:0.2em; margin-bottom:6px;">📋 在庫はカーセンサーで管理中</p>
@@ -427,6 +439,9 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
     <a href="https://www.carsensor.net/shop/ishikawa/227071003/#contents" target="_blank" style="display:inline-flex; align-items:center; gap:10px; background:var(--orange); color:white; font-weight:700; font-size:15px; padding:16px 32px; border-radius:50px; text-decoration:none; white-space:nowrap; box-shadow:0 4px 16px rgba(255,107,43,0.4);">🚗 カーセンサーで在庫を見る</a>
   </div>
   <div class="car-grid" id="carGrid"></div>
+  <div id="loadMoreWrap" style="text-align:center; margin-top:32px; display:none;">
+    <button id="loadMoreBtn" onclick="loadMoreCars()" style="background:var(--orange); color:white; border:none; border-radius:50px; padding:14px 40px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 4px 16px rgba(255,107,43,0.35);">もっと見る ▼</button>
+  </div>
 </section>
 
 
@@ -520,125 +535,17 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
       <p>不要になったお車やホイール、まずはお気軽にご相談ください。</p>
     </div>
     <div class="kaitori-cards">
-      <div class="kaitori-card">
+      <div class="kaitori-card" style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px;">
         <span class="kaitori-emoji">🚗</span>
         <h3>お車の買取</h3>
-        <p>どんなお車でもまずはご相談を！走行距離・年式問わず査定いたします。</p>
-        <ul class="kaitori-points">
-          <li>どんな車種・年式でもOK</li>
-          <li>走行距離が多くても相談可</li>
-          <li>事故車・不動車もご相談ください</li>
-          <li>出張査定も対応可</li>
-        </ul>
-        <a href="https://lin.ee/Nxu1UqE" target="_blank" class="btn-kaitori">💬 LINEで査定を依頼</a>
-        <a href="https://hokutojidousha.github.io/hokutojidousha/kaitori.html" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;color:var(--orange);font-size:13px;font-weight:700;text-decoration:none;">詳しく見る →</a>
+        <p>どんな車種・年式でもまずはご相談ください！</p>
+        <a href="https://hokutojidousha.github.io/hokutojidousha/kaitori.html" class="btn-kaitori" style="width:100%; justify-content:center; font-size:16px; padding:16px 22px;">車の買取 詳しくはこちら →</a>
       </div>
-      <div class="kaitori-card">
+      <div class="kaitori-card" style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px;">
         <span class="kaitori-emoji">🔩</span>
         <h3>ホイールの買取</h3>
-        <p>アルミホイール・スタッドレスセット等、使わなくなったホイールをお売りください！</p>
-        <ul class="kaitori-points">
-          <li>アルミホイール各種</li>
-          <li>スタッドレスタイヤセットも可</li>
-          <li>状態・サイズによって査定</li>
-          <li>まずは写真をLINEで送ってOK</li>
-        </ul>
-        <a href="https://lin.ee/Nxu1UqE" target="_blank" class="btn-kaitori">📸 写真を送って査定</a>
-        <a href="https://hokutojidousha.github.io/hokutojidousha/wheel_kaitori.html" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;color:var(--yellow);font-size:13px;font-weight:700;text-decoration:none;">詳しく見る →</a>
-      </div>
-    </div>
-
-    <!-- オークション代行 -->
-    <div style="margin-top:28px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,210,63,0.3); border-radius:20px; padding:32px 28px; position:relative; overflow:hidden;">
-      <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#FFD23F,#FF6B2B);"></div>
-      <span style="font-size:40px; display:block; margin-bottom:14px;">🏷️</span>
-      <h3 style="font-family:'Paytone One',sans-serif; font-size:20px; color:var(--yellow); margin-bottom:10px;">オークション代行という選択肢</h3>
-      <p style="font-size:13px; color:rgba(255,255,255,0.7); line-height:1.8; margin-bottom:20px;">
-        他社でお車を購入される方も、売却はぜひご相談ください！<br>
-        <strong style="color:var(--yellow);">下取りより高く売れる可能性があります。</strong>
-      </p>
-
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
-        <div style="background:rgba(255,255,255,0.06); border-radius:12px; padding:16px;">
-          <div style="font-size:11px; color:var(--yellow); font-weight:700; letter-spacing:0.1em; margin-bottom:10px;">📋 売れなくてもかかる費用</div>
-          <ul style="list-style:none; font-size:12px; color:rgba(255,255,255,0.75); line-height:2;">
-            <li>・ オークション会場出品料</li>
-            <li>・ 車の送料</li>
-            <li>・ 弊社手数料（出品表作成など）</li>
-          </ul>
-        </div>
-        <div style="background:rgba(255,255,255,0.06); border-radius:12px; padding:16px;">
-          <div style="font-size:11px; color:var(--yellow); font-weight:700; letter-spacing:0.1em; margin-bottom:10px;">✅ 売れたときにかかる費用</div>
-          <ul style="list-style:none; font-size:12px; color:rgba(255,255,255,0.75); line-height:2;">
-            <li>・ オークション成約手数料</li>
-            <li>・ 書類の送料</li>
-          </ul>
-        </div>
-      </div>
-
-      <div style="background:rgba(255,100,50,0.15); border:1px solid rgba(255,100,50,0.3); border-radius:12px; padding:16px; margin-bottom:20px;">
-        <div style="font-size:11px; color:#FF8F5E; font-weight:700; letter-spacing:0.1em; margin-bottom:10px;">⚠️ ご利用いただけないケース</div>
-        <ul style="list-style:none; font-size:12px; color:rgba(255,255,255,0.7); line-height:2;">
-          <li>・ ローン支払い中のお車</li>
-          <li>・ リース・残価設定ローン中のお車</li>
-          <li>・ 名義が申込者と異なるお車</li>
-          <li>・ 必要書類が揃わないお車</li>
-        </ul>
-      </div>
-
-      <div style="background:rgba(255,210,63,0.1); border:1px solid rgba(255,210,63,0.25); border-radius:12px; padding:16px; margin-bottom:20px;">
-        <div style="font-size:11px; color:var(--yellow); font-weight:700; letter-spacing:0.1em; margin-bottom:10px;">📩 より具体的な金額をお伝えするために</div>
-        <p style="font-size:12px; color:rgba(255,255,255,0.75); line-height:2;">
-          以下の情報をLINEでお送りいただけると、より正確な査定金額をお伝えできます😊
-        </p>
-        <ul style="list-style:none; font-size:12px; color:rgba(255,255,255,0.8); line-height:2.2; margin-top:8px;">
-          <li>💰 ご希望の売却金額</li>
-          <li>🔧 修復歴の有無</li>
-          <li>📄 車検証の写真</li>
-          <li>📸 内外装の写真（傷・凹みがある場合はその箇所も）</li>
-        </ul>
-      </div>
-      <a href="https://lin.ee/Nxu1UqE" target="_blank" class="btn-kaitori">💬 オークション代行を相談する</a>
-    </div>
-    <div class="kaitori-flow">
-      <h4>📋 買取の流れ</h4>
-      <div class="flow-steps">
-        <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-label">LINEまたは<br>電話でご連絡</div></div>
-        <div class="flow-arrow">›</div>
-        <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-label">写真・情報を<br>お送りください</div></div>
-        <div class="flow-arrow">›</div>
-        <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-label">査定金額を<br>ご提示</div></div>
-        <div class="flow-arrow">›</div>
-        <div class="flow-step"><div class="flow-step-num">4</div><div class="flow-step-label">書類のご準備<br>・お引き渡し</div></div>
-        <div class="flow-arrow">›</div>
-        <div class="flow-step"><div class="flow-step-num">5</div><div class="flow-step-label">即日〜<br>スピード対応</div></div>
-      </div>
-      <!-- 書類説明 -->
-      <div style="margin-top:20px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,210,63,0.25); border-radius:14px; padding:20px 24px;">
-        <div style="font-size:11px; color:var(--yellow); font-weight:700; letter-spacing:0.15em; margin-bottom:12px;">📄 STEP4 ご準備いただくもの</div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px;">
-          <div style="display:flex; align-items:flex-start; gap:10px;">
-            <span style="font-size:20px; flex-shrink:0;">🪪</span>
-            <div>
-              <p style="font-size:13px; color:white; font-weight:700; margin-bottom:2px;">運転免許証のコピー</p>
-              <p style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">本人確認のためご提出をお願いしております</p>
-            </div>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px;">
-            <span style="font-size:20px; flex-shrink:0;">📞</span>
-            <div>
-              <p style="font-size:13px; color:white; font-weight:700; margin-bottom:2px;">ご連絡先（電話番号）</p>
-              <p style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">お手続きの際にご連絡させていただきます</p>
-            </div>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px;">
-            <span style="font-size:20px; flex-shrink:0;">📋</span>
-            <div>
-              <p style="font-size:13px; color:white; font-weight:700; margin-bottom:2px;">車検証・印鑑</p>
-              <p style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">名義変更の手続きに必要です</p>
-            </div>
-          </div>
-        </div>
+        <p>アルミ・スタッドレスセット、使わなくなったホイールをお売りください！</p>
+        <a href="https://hokutojidousha.github.io/hokutojidousha/wheel_kaitori.html" class="btn-kaitori" style="width:100%; justify-content:center; font-size:16px; padding:16px 22px; background:linear-gradient(135deg,var(--yellow),var(--orange));">ホイール買取 詳しくはこちら →</a>
       </div>
     </div>
   </div>
@@ -728,7 +635,7 @@ footer .footer-logo { font-family:'Paytone One',sans-serif; font-size:22px; colo
   </div>
 </section>
 
-<section class="instagram-section">
+<section class="instagram-section" id="instagram">
   <div class="instagram-inner">
     <div class="instagram-header">
       <h2>📸 最新のInstagram投稿</h2>
@@ -939,6 +846,13 @@ function toImgUrl(url) {
 }
 
 // ===== 在庫車レンダリング =====
+var carsDisplayLimit = 6;
+
+function loadMoreCars() {
+  carsDisplayLimit += 6;
+  renderCars();
+}
+
 function renderCars() {
   var grid = document.getElementById('carGrid');
   if (!grid) return;
@@ -953,10 +867,15 @@ function renderCars() {
   });
   if (filtered.length === 0) {
     grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray);">該当する車両がありません</p>';
+    var wrap = document.getElementById('loadMoreWrap');
+    if (wrap) wrap.style.display = 'none';
     return;
   }
+  var visible = filtered.slice(0, carsDisplayLimit);
+  var wrap = document.getElementById('loadMoreWrap');
+  if (wrap) wrap.style.display = filtered.length > carsDisplayLimit ? 'block' : 'none';
   var html = '';
-  for (var i = 0; i < filtered.length; i++) {
+  for (var i = 0; i < visible.length; i++) {
     var c = filtered[i];
     var idx = allCars.indexOf(c);
     var isSold = (c.sold === 'TRUE' || c.sold === true);
@@ -1050,6 +969,7 @@ function setFilter(type, btn) {
   document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
   currentFilter = type;
+  carsDisplayLimit = 6;
   renderCars();
 }
 
