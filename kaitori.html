@@ -106,6 +106,20 @@ header { position:sticky; top:0; z-index:100; background:var(--white); box-shado
 .flow-content h3 { font-family:'Paytone One',sans-serif; font-size:17px; color:var(--yellow); margin-bottom:6px; }
 .flow-content p { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.8; }
 
+/* PAYMENT & DOCS */
+.payment-section { background:var(--white); padding:70px 32px; }
+.payment-inner { max-width:960px; margin:0 auto; }
+.payment-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.payment-card { background:var(--off-white); border-radius:20px; padding:28px 24px; }
+.payment-card-title { font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:14px; }
+.payment-card ul { list-style:none; }
+.payment-card ul li { font-size:13px; color:var(--gray); line-height:1.9; padding:4px 0; }
+.payment-card ul li strong { color:var(--dark); }
+.payment-doc-col { margin-bottom:16px; }
+.payment-doc-col:last-child { margin-bottom:0; }
+.payment-doc-col strong { display:block; font-size:12px; color:var(--orange); margin-bottom:6px; letter-spacing:0.05em; }
+.payment-note { text-align:center; font-size:12px; color:var(--gray); margin-top:20px; }
+
 /* AUCTION */
 .auction-section { background:var(--off-white); padding:70px 32px; }
 .auction-inner { max-width:960px; margin:0 auto; }
@@ -221,7 +235,8 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
   .auction-card { padding:28px 20px; }
   .access-inner { grid-template-columns:1fr; gap:24px; }
   .map-wrap { height:220px; }
-  .features,.flow-section,.auction-section,.kyoka-section,.jisseki-section,.access-section,.contact-section { padding:44px 16px; }
+  .features,.flow-section,.payment-section,.auction-section,.kyoka-section,.jisseki-section,.access-section,.contact-section { padding:44px 16px; }
+  .payment-grid { grid-template-columns:1fr; }
   .jisseki-grid { grid-template-columns:1fr; }
   .info-strip { padding:10px 16px; gap:10px; }
   .quick-cta { padding:0 16px; }
@@ -453,6 +468,53 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="payment-section">
+  <div class="payment-inner">
+    <div class="section-header">
+      <h2>お支払い・<span>必要書類</span>について</h2>
+      <p>スムーズなお取引のために、あらかじめご確認ください。</p>
+    </div>
+    <div class="payment-grid">
+      <div class="payment-card">
+        <div class="payment-card-title">💰 お支払いのタイミング</div>
+        <ul>
+          <li><strong>買取：</strong>15日までのご成約は当月末、16日〜月末のご成約は翌月15日にお振込み</li>
+          <li><strong>下取り：</strong>ご購入いただくお車の代金と相殺し、その場で精算</li>
+          <li><strong>オークション代行：</strong>オークションでの成約日を基準に、上記の締め日サイクルでお振込み（売却時期・金額は市場状況により変動します）</li>
+        </ul>
+      </div>
+      <div class="payment-card">
+        <div class="payment-card-title">📄 ご用意いただく書類</div>
+        <div class="payment-doc-col">
+          <strong>個人のお客様</strong>
+          <ul>
+            <li>車検証</li>
+            <li>自賠責保険証（原本）</li>
+            <li>印鑑登録証明書（発行3ヶ月以内）</li>
+            <li>実印</li>
+            <li>リサイクル券（お持ちの場合）</li>
+            <li>運転免許証のコピー</li>
+            <li>お振込先口座情報</li>
+          </ul>
+        </div>
+        <div class="payment-doc-col">
+          <strong>法人のお客様</strong>
+          <ul>
+            <li>車検証</li>
+            <li>自賠責保険証（原本）</li>
+            <li>印鑑証明書（法人・発行3ヶ月以内）</li>
+            <li>商業登記簿謄本（発行3ヶ月以内）</li>
+            <li>代表者印</li>
+            <li>ご担当者様の運転免許証のコピー</li>
+            <li>お振込先口座情報</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="payment-note">※ 書類はケースにより一部不要な場合があります。詳しくはLINEまたはお電話でお気軽にお尋ねください。</p>
   </div>
 </section>
 
