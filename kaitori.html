@@ -106,20 +106,6 @@ header { position:sticky; top:0; z-index:100; background:var(--white); box-shado
 .flow-content h3 { font-family:'Paytone One',sans-serif; font-size:17px; color:var(--yellow); margin-bottom:6px; }
 .flow-content p { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.8; }
 
-/* PAYMENT & DOCS */
-.payment-section { background:var(--white); padding:70px 32px; }
-.payment-inner { max-width:960px; margin:0 auto; }
-.payment-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-.payment-card { background:var(--off-white); border-radius:20px; padding:28px 24px; }
-.payment-card-title { font-family:'Paytone One',sans-serif; font-size:16px; color:var(--dark); margin-bottom:14px; }
-.payment-card ul { list-style:none; }
-.payment-card ul li { font-size:13px; color:var(--gray); line-height:1.9; padding:4px 0; }
-.payment-card ul li strong { color:var(--dark); }
-.payment-doc-col { margin-bottom:16px; }
-.payment-doc-col:last-child { margin-bottom:0; }
-.payment-doc-col strong { display:block; font-size:12px; color:var(--orange); margin-bottom:6px; letter-spacing:0.05em; }
-.payment-note { text-align:center; font-size:12px; color:var(--gray); margin-top:20px; }
-
 /* AUCTION */
 .auction-section { background:var(--off-white); padding:70px 32px; }
 .auction-inner { max-width:960px; margin:0 auto; }
@@ -158,9 +144,6 @@ header { position:sticky; top:0; z-index:100; background:var(--white); box-shado
 .jisseki-card { background:var(--white); border-radius:16px; padding:24px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
 .jisseki-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--orange),var(--yellow)); }
 .jisseki-car { font-weight:700; font-size:16px; color:var(--dark); margin-bottom:6px; }
-.jisseki-price { margin:14px 0 12px; padding:12px 14px; border-radius:12px; background:linear-gradient(135deg,var(--orange),#FF8F5E); color:white; box-shadow:0 7px 16px rgba(255,107,43,0.24); display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.jisseki-price-label { font-size:11px; font-weight:700; letter-spacing:0.08em; white-space:nowrap; }
-.jisseki-price-value { font-family:'Nunito','Noto Sans JP',sans-serif; font-size:28px; line-height:1; font-weight:800; letter-spacing:0.01em; text-align:right; word-break:break-all; }
 .jisseki-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
 .jisseki-tag { font-size:11px; padding:3px 10px; border-radius:10px; background:var(--yellow-light); color:#8B6A00; font-weight:500; }
 .jisseki-comment { font-size:13px; color:var(--gray); line-height:1.7; font-style:italic; }
@@ -188,34 +171,6 @@ header { position:sticky; top:0; z-index:100; background:var(--white); box-shado
 .contact-btn-line { background:#06C755; color:white; }
 .contact-info { background:white; border-radius:16px; padding:22px; box-shadow:var(--shadow); font-size:13px; color:var(--gray); line-height:2.2; }
 
-/* CONVERSION */
-.hero-proof { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:0 auto 24px; }
-.hero-proof span { color:#fff; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); border-radius:99px; padding:6px 11px; font-size:11px; }
-.quick-cta { background:var(--white); padding:0 32px; position:relative; z-index:2; }
-.quick-cta-inner { max-width:960px; margin:-34px auto 0; padding:26px 30px; border-radius:20px; background:linear-gradient(120deg,#fff 0%,#fff8ed 100%); box-shadow:0 12px 38px rgba(43,31,20,.15); display:flex; align-items:center; gap:24px; }
-.quick-cta-copy { flex:1; }
-.quick-cta-copy strong { display:block; font-family:'Paytone One',sans-serif; font-size:21px; color:var(--dark); margin-bottom:4px; }
-.quick-cta-copy p { color:var(--gray); font-size:13px; line-height:1.65; }
-.quick-cta-actions { display:flex; gap:10px; flex-shrink:0; }
-.btn-line, .btn-call { display:inline-flex; justify-content:center; align-items:center; gap:7px; min-height:52px; border-radius:12px; padding:0 19px; color:#fff; text-decoration:none; font-weight:700; font-size:14px; }
-.btn-line { background:#06C755; box-shadow:0 5px 16px rgba(6,199,85,.23); }
-.btn-call { background:var(--orange); }
-.cta-note { font-size:11px; color:var(--gray); margin-top:8px; }
-.trust-section { background:var(--orange-pale); padding:38px 32px; }
-.trust-grid { max-width:960px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; text-align:center; }
-.trust-item { background:rgba(255,255,255,.7); padding:16px; border-radius:14px; }
-.trust-item strong { display:block; font-size:14px; margin:5px 0; }
-.trust-item p { font-size:12px; color:var(--gray); line-height:1.6; }
-.faq-section { background:var(--white); padding:70px 32px; }
-.faq-inner { max-width:800px; margin:0 auto; }
-.faq-item { border-bottom:1px solid var(--gray-light); }
-.faq-item summary { list-style:none; cursor:pointer; font-weight:700; font-size:15px; padding:20px 36px 20px 0; position:relative; }
-.faq-item summary::-webkit-details-marker { display:none; }
-.faq-item summary::after { content:'＋'; color:var(--orange); position:absolute; right:4px; font-size:22px; top:14px; }
-.faq-item[open] summary::after { content:'－'; }
-.faq-item p { color:var(--gray); font-size:13px; line-height:1.85; padding:0 4px 20px; }
-.mobile-contact { display:none; }
-
 /* FOOTER */
 footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center; padding:40px 32px; font-size:12px; line-height:2; }
 .footer-logo { font-family:'Paytone One',sans-serif; font-size:20px; color:var(--yellow); margin-bottom:10px; }
@@ -235,20 +190,9 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
   .auction-card { padding:28px 20px; }
   .access-inner { grid-template-columns:1fr; gap:24px; }
   .map-wrap { height:220px; }
-  .features,.flow-section,.payment-section,.auction-section,.kyoka-section,.jisseki-section,.access-section,.contact-section { padding:44px 16px; }
-  .payment-grid { grid-template-columns:1fr; }
+  .features,.flow-section,.auction-section,.kyoka-section,.jisseki-section,.access-section,.contact-section { padding:44px 16px; }
   .jisseki-grid { grid-template-columns:1fr; }
   .info-strip { padding:10px 16px; gap:10px; }
-  .quick-cta { padding:0 16px; }
-  .quick-cta-inner { margin-top:-24px; padding:22px 18px; display:block; }
-  .quick-cta-copy strong { font-size:18px; }
-  .quick-cta-actions { margin-top:16px; }
-  .quick-cta-actions a { flex:1; padding:0 10px; }
-  .trust-section,.faq-section { padding:44px 16px; }
-  .trust-grid { grid-template-columns:1fr; gap:9px; }
-  .mobile-contact { position:fixed; display:flex; bottom:0; left:0; right:0; z-index:200; gap:8px; padding:9px 12px; background:rgba(255,255,255,.96); box-shadow:0 -3px 16px rgba(43,31,20,.14); }
-  .mobile-contact a { flex:1; min-height:46px; }
-  body { padding-bottom:70px; }
 }
 @media (max-width:480px) {
   .features-grid { grid-template-columns:1fr; }
@@ -353,25 +297,10 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
     </div>
     <div class="hero-badge">🚗 CAR PURCHASE</div>
     <h1>金沢市の<span>車買取</span>なら<br>北斗自動車へ</h1>
-    <p class="hero-sub">売却するか迷っている段階でも大丈夫です。<br>LINEでお車の写真を送るだけで、無料でご相談いただけます。</p>
-    <div class="hero-proof"><span>✓ 査定・相談は無料</span><span>✓ 車種・年式を問わず相談OK</span><span>✓ 他社購入のお車も歓迎</span></div>
+    <p class="hero-sub">どんな車種・年式でもまずはご相談ください。<br>LINEで写真を送るだけで簡単査定。下取り・オークション代行も対応します。</p>
     <div class="hero-cta">
       <a href="https://lin.ee/Nxu1UqE" target="_blank" rel="noopener noreferrer" class="btn-primary">💬 LINEで無料査定</a>
       <a href="tel:0762077369" class="btn-secondary">📞 電話で相談</a>
-    </div>
-  </div>
-</section>
-
-<section class="quick-cta" aria-label="無料査定のご案内">
-  <div class="quick-cta-inner">
-    <div class="quick-cta-copy">
-      <strong>まずは「いくらになる？」だけでもOK</strong>
-      <p>売却を決めていなくても、お気軽にご相談ください。写真があると、よりスムーズにご案内できます。</p>
-      <div class="cta-note">無理な営業はいたしません。ご相談のみでも歓迎です。</div>
-    </div>
-    <div class="quick-cta-actions">
-      <a href="https://lin.ee/Nxu1UqE" target="_blank" rel="noopener noreferrer" class="btn-line">💬 LINEで無料査定</a>
-      <a href="tel:0762077369" class="btn-call">📞 電話で相談</a>
     </div>
   </div>
 </section>
@@ -414,14 +343,6 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
         <p class="feature-desc">かかる費用を事前に明確にお伝えします。後から追加費用が発生することはありません。</p>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="trust-section" aria-label="安心してご相談いただくために">
-  <div class="trust-grid">
-    <div class="trust-item"><span>💬</span><strong>相談だけでも大歓迎</strong><p>「売るか迷っている」という段階からご相談いただけます。</p></div>
-    <div class="trust-item"><span>📷</span><strong>LINEで手軽にスタート</strong><p>車の写真・車検証の写真を送ると、やりとりがスムーズです。</p></div>
-    <div class="trust-item"><span>🤝</span><strong>売り方も一緒に検討</strong><p>買取・下取り・オークション代行から、状況に合う方法をご案内します。</p></div>
   </div>
 </section>
 
@@ -468,53 +389,6 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="payment-section">
-  <div class="payment-inner">
-    <div class="section-header">
-      <h2>お支払い・<span>必要書類</span>について</h2>
-      <p>スムーズなお取引のために、あらかじめご確認ください。</p>
-    </div>
-    <div class="payment-grid">
-      <div class="payment-card">
-        <div class="payment-card-title">💰 お支払いのタイミング</div>
-        <ul>
-          <li><strong>買取：</strong>15日までのご成約は当月末、16日〜月末のご成約は翌月15日にお振込み</li>
-          <li><strong>下取り：</strong>ご購入いただくお車の代金と相殺し、その場で精算</li>
-          <li><strong>オークション代行：</strong>オークションでの成約日を基準に、上記の締め日サイクルでお振込み（売却時期・金額は市場状況により変動します）</li>
-        </ul>
-      </div>
-      <div class="payment-card">
-        <div class="payment-card-title">📄 ご用意いただく書類</div>
-        <div class="payment-doc-col">
-          <strong>個人のお客様</strong>
-          <ul>
-            <li>車検証</li>
-            <li>自賠責保険証（原本）</li>
-            <li>印鑑登録証明書（発行3ヶ月以内）</li>
-            <li>実印</li>
-            <li>リサイクル券（お持ちの場合）</li>
-            <li>運転免許証のコピー</li>
-            <li>お振込先口座情報</li>
-          </ul>
-        </div>
-        <div class="payment-doc-col">
-          <strong>法人のお客様</strong>
-          <ul>
-            <li>車検証</li>
-            <li>自賠責保険証（原本）</li>
-            <li>印鑑証明書（法人・発行3ヶ月以内）</li>
-            <li>商業登記簿謄本（発行3ヶ月以内）</li>
-            <li>代表者印</li>
-            <li>ご担当者様の運転免許証のコピー</li>
-            <li>お振込先口座情報</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <p class="payment-note">※ 書類はケースにより一部不要な場合があります。詳しくはLINEまたはお電話でお気軽にお尋ねください。</p>
   </div>
 </section>
 
@@ -615,6 +489,18 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
   </div>
 </section>
 
+<section style="padding:40px 32px 0; max-width:960px; margin:0 auto;">
+  <div style="background:var(--off-white); border-radius:16px; padding:24px 28px; text-align:center;">
+    <p style="font-size:14px; color:var(--gray); line-height:1.8; margin:0;">
+      ホイール・スタッドレスタイヤだけの買取もOK！ 詳しくは
+      <a href="https://hokutojidousha.github.io/hokutojidousha/wheel_kaitori.html" style="color:var(--orange); font-weight:700; text-decoration:underline;">金沢市のホイール買取ページ</a>
+      をご覧ください。中古車の販売在庫は
+      <a href="https://hokutojidousha.github.io/hokutojidousha/" style="color:var(--orange); font-weight:700; text-decoration:underline;">北斗自動車トップページ</a>
+      からご確認いただけます。
+    </p>
+  </div>
+</section>
+
 <section class="contact-section">
   <div class="contact-inner">
     <h2>📨 査定・お問い合わせ</h2>
@@ -629,19 +515,6 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
   </div>
 </section>
 
-<section class="faq-section">
-  <div class="faq-inner">
-    <div class="section-header">
-      <h2>よくある<span>ご質問</span></h2>
-      <p>ご不明な点は、LINEまたはお電話でお気軽にお尋ねください。</p>
-    </div>
-    <details class="faq-item"><summary>査定だけでも大丈夫ですか？</summary><p>もちろんです。売却を決めていない段階でも、お車の状況を伺いながらご相談いただけます。</p></details>
-    <details class="faq-item"><summary>古い車・走行距離が多い車も相談できますか？</summary><p>はい。年式・走行距離・車種を問わず、まずはお気軽にご連絡ください。事故車・不動車についても状況をお聞かせください。</p></details>
-    <details class="faq-item"><summary>LINEでは何を送ればよいですか？</summary><p>車の外観・内装・メーターの写真、車検証の写真、傷や凹みがあればその箇所の写真をお送りいただくと、よりスムーズです。</p></details>
-    <details class="faq-item"><summary>他店で車を買う予定ですが、売却だけ相談できますか？</summary><p>はい。売却・下取りのみのご相談も歓迎しています。</p></details>
-  </div>
-</section>
-
 <footer>
   <div class="footer-logo">株式会社北斗自動車</div>
   <div class="footer-nav">
@@ -652,11 +525,6 @@ footer { background:var(--dark); color:rgba(255,255,255,0.6); text-align:center;
   <p>石川県金沢市八日市出町951　TEL: 076-207-7369<br>
   © 2024 株式会社北斗自動車. All rights reserved.</p>
 </footer>
-
-<div class="mobile-contact" aria-label="お問い合わせ">
-  <a href="tel:0762077369" class="btn-call">📞 電話で相談</a>
-  <a href="https://lin.ee/Nxu1UqE" target="_blank" rel="noopener noreferrer" class="btn-line">💬 LINEで無料査定</a>
-</div>
 
 <script>
 // ===== スプレッドシートURL =====
@@ -735,10 +603,10 @@ function renderJisseki(data) {
     return '<div class="jisseki-card">' +
       imgHtml +
       '<div class="jisseki-car">' + (d.car_name || '') + '</div>' +
-      (d.price ? '<div class="jisseki-price"><span class="jisseki-price-label">買取金額</span><strong class="jisseki-price-value">¥' + d.price + '</strong></div>' : '') +
       '<div class="jisseki-meta">' +
       (d.year ? '<span class="jisseki-tag">' + d.year + '</span>' : '') +
       (d.km ? '<span class="jisseki-tag">' + d.km + '</span>' : '') +
+      (d.price ? '<span class="jisseki-tag" style="background:var(--orange-pale);color:var(--orange);font-weight:700;">¥' + d.price + '</span>' : '') +
       '</div>' +
       (d.comment ? '<div class="jisseki-comment">' + d.comment + '</div>' : '') +
       '</div>';
