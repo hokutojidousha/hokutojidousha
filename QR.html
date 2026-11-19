@@ -265,11 +265,20 @@ function stopCam(){
 }
 $("camBtn").addEventListener("click",function(){
   if(stream){stopCam();return}
-  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment",width:{ideal:1920},height:{ideal:1080}},audio:false}).then(function(s){
+  var md=navigator.mediaDevices;
+  function camErr(m){$("st").innerHTML='<span class="warn">'+m+'</span>'}
+  if(!md||!md.getUserMedia){camErr("このブラウザではカメラを使えません（LINEなどのアプリ内ブラウザの可能性があります）。SafariまたはChromeでURLを開き直してください。");return}
+  md.getUserMedia({video:{facingMode:"environment",width:{ideal:1920},height:{ideal:1080}},audio:false}).catch(function(e){
+    if(e&&(e.name==="OverconstrainedError"||e.name==="NotFoundError"||e.name==="ConstraintNotSatisfiedError")) return md.getUserMedia({video:true,audio:false});
+    throw e;
+  }).then(function(s){
     stream=s; var v=$("vid"); v.srcObject=s; v.style.display="block"; v.play();
     $("camBtn").textContent="カメラを止める"; loop();
-  }).catch(function(){
-    $("st").innerHTML='<span class="warn">カメラを起動できませんでした。「写真から読み取る」をお試しください。</span>';
+  }).catch(function(e){
+    var n=(e&&e.name)||"不明";
+    if(n==="NotAllowedError"||n==="SecurityError") camErr("カメラの使用が許可されていません（"+n+"）。ブラウザのサイト設定でカメラを「許可」にして再読み込みしてください。iPhoneは「設定 → Safari → カメラ」も確認してください。");
+    else if(n==="NotReadableError") camErr("カメラが他のアプリで使用中です（"+n+"）。他のアプリを閉じてから再試行してください。");
+    else camErr("カメラを起動できませんでした（"+n+"）。「写真から読み取る」をお試しください。");
   });
 });
 $("file").addEventListener("change",function(e){
