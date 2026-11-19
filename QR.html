@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; img-src data: blob:; media-src blob:; connect-src 'none'">
+<title>車検証QR読み取り</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--sub:#5d6670;--bd:#d9dde3;--ac:#1a5fd0;--ac-tx:#fff;--ok:#12803a;--warn:#a15c00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171b;--card:#1d2127;--tx:#e8eaed;--sub:#9aa3ad;--bd:#343a42;--ac:#5b9bff;--ac-tx:#08111f;--ok:#4cc27a;--warn:#e0a040}}
+:root[data-theme="dark"]{--bg:#14171b;--card:#1d2127;--tx:#e8eaed;--sub:#9aa3ad;--bd:#343a42;--ac:#5b9bff;--ac-tx:#08111f;--ok:#4cc27a;--warn:#e0a040}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.6}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;margin:.2em 0}
+h2{font-size:1rem;margin:0 0 .6em}
+.lead{color:var(--sub);font-size:.88rem;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px}
+.vid{width:100%;aspect-ratio:4/3;background:#000;border-radius:8px;object-fit:cover;display:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button,.btn{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:9px 14px;cursor:pointer}
+button.pri{background:var(--ac);color:var(--ac-tx);border-color:var(--ac)}
+input[type=file]{display:none}
+.st{font-size:.88rem;margin-top:10px;color:var(--sub)}
+.st b{color:var(--ok)}
+.warn{color:var(--warn)}
+dl{margin:0}
+.it{display:grid;grid-template-columns:8.5em 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd);align-items:center}
+.it:last-child{border:0}
+dt{color:var(--sub);font-size:.85rem}
+dd{margin:0;word-break:break-all;font-variant-numeric:tabular-nums}
+dd.na{color:var(--sub)}
+.man{display:flex;align-items:center;gap:6px}
+.man input{width:100%;font:inherit;padding:6px 8px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx)}
+.man span{color:var(--sub);font-size:.85rem;white-space:nowrap}
+textarea{width:100%;min-height:190px;font:inherit;font-size:.9rem;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+details{font-size:.82rem;color:var(--sub)}
+pre{white-space:pre-wrap;word-break:break-all;margin:.4em 0}
+.note{font-size:.82rem;color:var(--sub);margin:8px 0 0}
+</style>
+</head>
+<body>
+<main>
+<h1>車検証QR読み取り</h1>
+<p class="lead">読み取りも解析もこの端末のブラウザ内だけで行い、データは外部に送信しません（通信は禁止設定済み）。</p>
+
+<section class="card">
+  <h2>1. QRコードを読み取る</h2>
+  <video id="vid" class="vid" playsinline muted></video>
+  <div class="row">
+    <button class="pri" id="camBtn">カメラで読み取る</button>
+    <label class="btn">写真から読み取る<input type="file" id="file" accept="image/*" capture="environment"></label>
+    <button id="reset">リセット</button>
+  </div>
+  <div class="st" id="st">電子車検証の右下にある2種類のQR（コード2・コード3）を映してください。小さなQRが複数並んでいますが、まとめて映して構いません。</div>
+</section>
+
+<section class="card">
+  <h2>2. 結果</h2>
+  <dl id="list"></dl>
+  <p class="note">グレーの欄は車検証のQRに入っていない項目です。券面を見て手入力できます。</p>
+</section>
+
+<section class="card">
+  <h2>3. テキストとしてコピー</h2>
+  <textarea id="out" readonly></textarea>
+  <div class="row"><button class="pri" id="copy">コピー</button></div>
+  <details><summary>読み取った生データ（確認用）</summary><pre id="raw">なし</pre></details>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var pool=new Map(), c2=null, c3=null, stream=null, timer=null;
+
+var FIELDS=[
+ {l:"車名",man:1,ph:"例：トヨタ"},
+ {l:"型式",key:"model"},
+ {l:"初度登録年月",key:"first"},
+ {l:"車台番号",key:"vin"},
+ {l:"有効期間満了日",key:"exp"},
+ {l:"原動機型式",key:"eng"},
+ {l:"長さ",man:1,u:"cm"},{l:"幅",man:1,u:"cm"},{l:"高さ",man:1,u:"cm"},
+ {l:"型式指定番号",key:"tsn"},
+ {l:"類別区分番号",key:"rcn"},
+ {l:"乗車定員",man:1,u:"人"},
+ {l:"最大積載量",man:1,u:"kg"},
+ {l:"車両重量",man:1,u:"kg"},
+ {l:"車両総重量",man:1,u:"kg"}
+];
+
+function buildList(){
+  var h="";
+  FIELDS.forEach(function(f,i){
+    h+='<div class="it"><dt>'+f.l+'</dt><dd>';
+    if(f.man){h+='<div class="man"><input id="m'+i+'" inputmode="text" placeholder="'+(f.ph||"")+'">'+(f.u?'<span>'+f.u+'</span>':'')+'</div>';}
+    else{h+='<span id="v'+i+'" class="na">未読み取り</span>';}
+    h+='</dd></div>';
+  });
+  $("list").innerHTML=h;
+  FIELDS.forEach(function(f,i){ if(f.man) $("m"+i).addEventListener("input",buildText); });
+}
+
+/* ---------- 解析 ---------- */
+function concat(arrs){
+  var n=0; arrs.forEach(function(a){n+=a.length});
+  var o=new Uint8Array(n),p=0; arrs.forEach(function(a){o.set(a,p);p+=a.length});
+  return o;
+}
+function perms(items,k){
+  if(k===0) return [[]];
+  var out=[];
+  items.forEach(function(it,i){
+    var rest=items.filter(function(_,j){return j!==i});
+    perms(rest,k-1).forEach(function(p){out.push([it].concat(p))});
+  });
+  return out;
+}
+function ascii(b){var s="";for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return s}
+function sjis(b){try{return new TextDecoder("shift_jis").decode(b)}catch(e){return ascii(b)}}
+
+function parse3(s){
+  if(!/^[\x20-\x7e]+$/.test(s)) return null;
+  var f=s.split("/");
+  if(f[0]!=="2") return null;
+  var k=-1;
+  for(var j=2;j<f.length-2;j++){
+    if(/^\d{6}$/.test(f[j])&&/^\d{4}$/.test(f[j+1])){k=j;break}
+  }
+  if(k<0) return null;
+  var model=f[k+2].trim();
+  if(!model) return null;
+  var t=(f[2]||"").trim();
+  return {tsn:t?t.slice(0,5):"",rcn:t?t.slice(5):"",exp:f[k],first:f[k+1],model:model};
+}
+function parse2(s){
+  var f=s.split("/");
+  if(f[0]!=="2"||f.length<5) return null;
+  if(!/^[A-H1-8\-]$/.test((f[2]||"").trim())) return null;
+  var vin=f[3].trim(), eng=f[4].trim();
+  if(!vin||!eng) return null;
+  return {vin:vin,eng:eng};
+}
+function assemble(){
+  var items=Array.from(pool.entries()).map(function(e){return {h:e[0],b:e[1]}});
+  var used={};
+  if(!c3){
+    var ps=perms(items,3);
+    for(var i=0;i<ps.length;i++){
+      var r=parse3(ascii(concat(ps[i].map(function(x){return x.b}))));
+      if(r){c3=r;break}
+    }
+  }
+  if(!c2){
+    var ps2=perms(items,2);
+    for(var j=0;j<ps2.length;j++){
+      var r2=parse2(sjis(concat(ps2[j].map(function(x){return x.b}))));
+      if(r2){c2=r2;break}
+    }
+  }
+}
+
+/* ---------- 表示用整形 ---------- */
+function wareki(y,m){
+  var n;
+  if(y>2019||(y===2019&&m>=5)){n=y-2018;return "令和"+(n===1?"元":n)+"年"}
+  if(y>=1989){n=y-1988;return "平成"+(n===1?"元":n)+"年"}
+  n=y-1925;return "昭和"+n+"年";
+}
+function fullYear(yy){return yy<=60?2000+yy:1900+yy}
+function fmtFirst(s){
+  if(s==="9999") return "未設定";
+  var y=fullYear(+s.slice(0,2)), m=+s.slice(2);
+  return y+"年"+m+"月（"+wareki(y,m)+m+"月）";
+}
+function fmtExp(s){
+  if(s==="999999") return "QRに記録なし（電子車検証の券面コードは固定値のため）";
+  var y=fullYear(+s.slice(0,2)), m=+s.slice(2,4), d=+s.slice(4);
+  return y+"年"+m+"月"+d+"日（"+wareki(y,m)+m+"月"+d+"日）";
+}
+function valueOf(key){
+  if(key==="vin") return c2?c2.vin:null;
+  if(key==="eng") return c2?c2.eng:null;
+  if(!c3) return null;
+  switch(key){
+    case "model": return c3.model;
+    case "first": return fmtFirst(c3.first);
+    case "exp": return fmtExp(c3.exp);
+    case "tsn": return c3.tsn||"なし（型式指定車ではありません）";
+    case "rcn": return c3.rcn||"なし（型式指定車ではありません）";
+  }
+  return null;
+}
+
+/* ---------- 描画 ---------- */
+function render(){
+  FIELDS.forEach(function(f,i){
+    if(f.man) return;
+    var el=$("v"+i), v=valueOf(f.key);
+    if(v===null){el.textContent="未読み取り";el.className="na"}
+    else{el.textContent=v;el.className=""}
+  });
+  var n=pool.size;
+  $("st").innerHTML="コード2："+(c2?"<b>読み取り完了</b>":"未完了（2個で1組）")+" ／ コード3："+(c3?"<b>読み取り完了</b>":"未完了（3個で1組）")+" ／ 検出したQR："+n+"個";
+  var raw=[];
+  pool.forEach(function(b){raw.push(ascii(b).replace(/[^\x20-\x7e]/g,function(c){return "\\x"+c.charCodeAt(0).toString(16).padStart(2,"0")}))});
+  $("raw").textContent=raw.length?raw.join("\n"):"なし";
+  buildText();
+}
+function buildText(){
+  var lines=FIELDS.map(function(f,i){
+    var v;
+    if(f.man){v=$("m"+i).value.trim(); if(v&&f.u) v+=f.u;}
+    else v=valueOf(f.key);
+    return f.l+"："+(v||"");
+  });
+  $("out").value=lines.join("\n");
+}
+
+/* ---------- 読み取り ---------- */
+function addPiece(bin){
+  var b=Uint8Array.from(bin);
+  var h=Array.prototype.join.call(b,",");
+  if(pool.has(h)||pool.size>=12) return;
+  pool.set(h,b);
+  assemble();
+  render();
+}
+function scanCanvas(ctx,w,h){
+  var found=0;
+  for(var t=0;t<6;t++){
+    var img=ctx.getImageData(0,0,w,h);
+    var r=jsQR(img.data,w,h,{inversionAttempts:"dontInvert"});
+    if(!r) break;
+    found++;
+    addPiece(r.binaryData);
+    var L=r.location, xs=[L.topLeftCorner.x,L.topRightCorner.x,L.bottomLeftCorner.x,L.bottomRightCorner.x],
+        ys=[L.topLeftCorner.y,L.topRightCorner.y,L.bottomLeftCorner.y,L.bottomRightCorner.y], m=4;
+    var x0=Math.min.apply(null,xs)-m, y0=Math.min.apply(null,ys)-m;
+    ctx.fillStyle="#fff";
+    ctx.fillRect(x0,y0,Math.max.apply(null,xs)+m-x0,Math.max.apply(null,ys)+m-y0);
+  }
+  return found;
+}
+var cv=document.createElement("canvas"), cx=cv.getContext("2d",{willReadFrequently:true});
+function loop(){
+  var v=$("vid");
+  if(stream&&v.videoWidth){
+    var sc=Math.min(1,1280/v.videoWidth);
+    cv.width=Math.round(v.videoWidth*sc); cv.height=Math.round(v.videoHeight*sc);
+    cx.drawImage(v,0,0,cv.width,cv.height);
+    scanCanvas(cx,cv.width,cv.height);
+  }
+  timer=setTimeout(loop,150);
+}
+function stopCam(){
+  clearTimeout(timer);
+  if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}
+  $("vid").style.display="none"; $("camBtn").textContent="カメラで読み取る";
+}
+$("camBtn").addEventListener("click",function(){
+  if(stream){stopCam();return}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment",width:{ideal:1920},height:{ideal:1080}},audio:false}).then(function(s){
+    stream=s; var v=$("vid"); v.srcObject=s; v.style.display="block"; v.play();
+    $("camBtn").textContent="カメラを止める"; loop();
+  }).catch(function(){
+    $("st").innerHTML='<span class="warn">カメラを起動できませんでした。「写真から読み取る」をお試しください。</span>';
+  });
+});
+$("file").addEventListener("change",function(e){
+  var f=e.target.files[0]; if(!f) return;
+  createImageBitmap(f).then(function(bm){
+    var sc=Math.min(1,2000/Math.max(bm.width,bm.height));
+    cv.width=Math.round(bm.width*sc); cv.height=Math.round(bm.height*sc);
+    cx.drawImage(bm,0,0,cv.width,cv.height);
+    var n=scanCanvas(cx,cv.width,cv.height);
+    if(!n) $("st").innerHTML='<span class="warn">QRコードを検出できませんでした。近づいて、ピントを合わせて撮り直してください。</span>';
+  }).catch(function(){$("st").innerHTML='<span class="warn">画像を読み込めませんでした。</span>'});
+  e.target.value="";
+});
+$("reset").addEventListener("click",function(){pool.clear();c2=null;c3=null;render()});
+$("copy").addEventListener("click",function(){
+  var t=$("out").value, b=$("copy");
+  function ok(){b.textContent="コピーしました";setTimeout(function(){b.textContent="コピー"},1500)}
+  function fb(){var o=$("out");o.removeAttribute("readonly");o.select();try{document.execCommand("copy");ok()}catch(e){}o.setAttribute("readonly","")}
+  try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}
+});
+
+buildList(); render();
+})();
+</script>
+</body>
+</html>
