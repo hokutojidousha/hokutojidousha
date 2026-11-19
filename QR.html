@@ -51,7 +51,7 @@ pre{white-space:pre-wrap;word-break:break-all;margin:.4em 0}
   <video id="vid" class="vid" playsinline muted></video>
   <div class="row">
     <button class="pri" id="camBtn">カメラで読み取る</button>
-    <label class="btn">写真から読み取る<input type="file" id="file" accept="image/*" capture="environment"></label>
+    <label class="btn">写真から読み取る<input type="file" id="file" accept="image/*" multiple></label>
     <button id="reset">リセット</button>
   </div>
   <div class="st" id="st">電子車検証の右下にある2種類のQR（コード2・コード3）を映してください。小さなQRが複数並んでいますが、まとめて映して構いません。</div>
@@ -281,16 +281,47 @@ $("camBtn").addEventListener("click",function(){
     else camErr("カメラを起動できませんでした（"+n+"）。「写真から読み取る」をお試しください。");
   });
 });
+function makeJobs(bm){
+  var s=Math.min(1,4000/Math.max(bm.width,bm.height)), W=Math.round(bm.width*s), H=Math.round(bm.height*s);
+  var base=document.createElement("canvas"); base.width=W; base.height=H;
+  base.getContext("2d").drawImage(bm,0,0,W,H);
+  var jobs=[];
+  [1,2,3,4].forEach(function(n){
+    var tw=Math.round(W/n), th=Math.round(H/n), sx=Math.max(1,Math.round(tw/2)), sy=Math.max(1,Math.round(th/2));
+    for(var y=0;y<=H-th+1;y+=sy){
+      for(var x=0;x<=W-tw+1;x+=sx){
+        jobs.push((function(x,y,tw,th){return function(){
+          var k=Math.max(0.5,Math.min(2,1200/Math.max(tw,th)));
+          cv.width=Math.round(tw*k); cv.height=Math.round(th*k);
+          cx.drawImage(base,x,y,tw,th,0,0,cv.width,cv.height);
+          scanCanvas(cx,cv.width,cv.height);
+        }})(x,y,tw,th));
+      }
+    }
+  });
+  return jobs;
+}
+function runJobs(jobs,done){
+  var i=0;
+  (function step(){
+    if(i>=jobs.length||(c2&&c3)){done();return}
+    $("st").textContent="解析中… "+(i+1)+"/"+jobs.length;
+    jobs[i++]();
+    setTimeout(step,0);
+  })();
+}
 $("file").addEventListener("change",function(e){
-  var f=e.target.files[0]; if(!f) return;
-  createImageBitmap(f).then(function(bm){
-    var sc=Math.min(1,2000/Math.max(bm.width,bm.height));
-    cv.width=Math.round(bm.width*sc); cv.height=Math.round(bm.height*sc);
-    cx.drawImage(bm,0,0,cv.width,cv.height);
-    var n=scanCanvas(cx,cv.width,cv.height);
-    if(!n) $("st").innerHTML='<span class="warn">QRコードを検出できませんでした。近づいて、ピントを合わせて撮り直してください。</span>';
-  }).catch(function(){$("st").innerHTML='<span class="warn">画像を読み込めませんでした。</span>'});
-  e.target.value="";
+  var files=Array.prototype.slice.call(e.target.files); e.target.value="";
+  var before=pool.size;
+  (function next(){
+    var f=files.shift();
+    if(!f){
+      render();
+      if(pool.size===before) $("st").innerHTML='<span class="warn">QRコードを検出できませんでした。QRに近づき、ピントを合わせ、反射を避けて撮り直してください。</span>';
+      return;
+    }
+    createImageBitmap(f).then(function(bm){runJobs(makeJobs(bm),next)}).catch(function(){next()});
+  })();
 });
 $("reset").addEventListener("click",function(){pool.clear();c2=null;c3=null;render()});
 $("copy").addEventListener("click",function(){
